@@ -1,0 +1,21 @@
+{
+  "name": "jchpl-mis",
+  "version": "1.0.0",
+  "description": "SaaS MIS Reporting Application",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "start:python": "cd python-service && python main.py",
+    "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "db:init": "cd backend && npm run db:init"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

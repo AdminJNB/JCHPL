@@ -1,0 +1,25 @@
+node:internal/child_process:421
+    throw new ErrnoException(err, 'spawn');
+    ^
+
+Error: spawn EPERM
+    at ChildProcess.spawn (node:internal/child_process:421:11)
+    at spawn (node:child_process:761:9)
+    at Object.execFile (node:child_process:351:17)
+    at exec (node:child_process:234:25)
+    at Object.<anonymous> (D:\Projects\JCHPL_MIS\node_modules\pstree.remy\lib\index.js:7:1)
+    at Module._compile (node:internal/modules/cjs/loader:1369:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1427:10)
+    at Module.load (node:internal/modules/cjs/loader:1206:32)
+    at Module._load (node:internal/modules/cjs/loader:1022:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19) {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'spawn'
+}
+
+Node.js v20.12.2
+npm ERR! Lifecycle script `dev` failed with error: 
+npm ERR! Error: command failed 
+npm ERR!   in workspace: jchpl-mis-backend@1.0.0 
+npm ERR!   at location: D:\Projects\JCHPL_MIS\backend 

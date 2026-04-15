@@ -1,0 +1,34 @@
+0 verbose cli D:\Projects\JCHPL_MIS\tools\node-v20.12.2-win-x64\node.exe D:\Projects\JCHPL_MIS\tools\node-v20.12.2-win-x64\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.5.0
+2 info using node@v20.12.2
+3 timing npm:load:whichnode Completed in 2ms
+4 timing config:load:defaults Completed in 2ms
+5 timing config:load:file:D:\Projects\JCHPL_MIS\tools\node-v20.12.2-win-x64\node_modules\npm\npmrc Completed in 2ms
+6 timing config:load:builtin Completed in 2ms
+7 timing config:load:cli Completed in 2ms
+8 timing config:load:env Completed in 0ms
+9 timing config:load:project Completed in 1ms
+10 timing config:load:file:C:\Users\abhis\.npmrc Completed in 0ms
+11 timing config:load:user Completed in 0ms
+12 timing config:load:file:D:\Projects\JCHPL_MIS\tools\node-v20.12.2-win-x64\etc\npmrc Completed in 0ms
+13 timing config:load:global Completed in 0ms
+14 timing config:load:setEnvs Completed in 0ms
+15 timing config:load Completed in 8ms
+16 timing npm:load:configload Completed in 9ms
+17 timing config:load:flatten Completed in 2ms
+18 timing npm:load:mkdirpcache Completed in 0ms
+19 timing npm:load:mkdirplogs Completed in 0ms
+20 verbose title npm prefix
+21 verbose argv "prefix" "--global"
+22 timing npm:load:setTitle Completed in 0ms
+23 timing npm:load:display Completed in 1ms
+24 verbose logfile logs-max:10 dir:D:\Projects\JCHPL_MIS\frontend\.localappdata\npm-cache\_logs\2026-04-14T11_39_11_894Z-
+25 verbose logfile D:\Projects\JCHPL_MIS\frontend\.localappdata\npm-cache\_logs\2026-04-14T11_39_11_894Z-debug-0.log
+26 timing npm:load:logFile Completed in 12ms
+27 timing npm:load:timers Completed in 0ms
+28 timing npm:load:configScope Completed in 0ms
+29 timing npm:load Completed in 49ms
+30 timing command:prefix Completed in 1ms
+31 verbose exit 0
+32 timing npm Completed in 118ms
+33 info ok

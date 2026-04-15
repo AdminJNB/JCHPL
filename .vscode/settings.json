@@ -1,0 +1,22 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "npm install": true,
+        "npm start": true,
+        "/^cd frontend; npm run build$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd frontend; npm run build; Write-Host \\(\"EXIT:\" \\+ \\$LASTEXITCODE\\)$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd D:\\\\Projects\\\\JCHPL_MIS\\\\frontend; npm run build; Write-Host \\(\"EXIT:\" \\+ \\$LASTEXITCODE\\)$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^Get-Process node -ErrorAction SilentlyContinue \\| Select-Object Id,CPU,StartTime,Path \\| Format-Table -AutoSize$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
