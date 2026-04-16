@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, PersonAdd } from '@mui/icons-material';
 import { authAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -18,6 +19,7 @@ const Register = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,13 +36,21 @@ const Register = () => {
     try {
       const response = await authAPI.register({ email, username, password, confirmPassword });
       if (response.data?.success) {
-        setSuccess(response.data.message || 'Registration successful. Please login.');
+        const loginResult = await login(username, password);
+        if (loginResult.success) {
+          navigate('/');
+          return;
+        }
+
+        setSuccess('Registration successful. Please login.');
         setTimeout(() => navigate('/login'), 1200);
       } else {
         setError(response.data?.message || 'Registration failed');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      const serverMessage = err.response?.data?.message;
+      const validationError = err.response?.data?.errors?.[0]?.msg;
+      setError(serverMessage || validationError || 'Registration failed');
     } finally {
       setLoading(false);
     }
