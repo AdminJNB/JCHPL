@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { pool } = require('./database/db');
-const { getConfiguredFrontendOrigins, normalizeOriginValue } = require('./config/frontend');
+const { getConfiguredFrontendOrigins, isTrustedFrontendOrigin, normalizeOriginValue } = require('./config/frontend');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -53,7 +53,7 @@ app.use(cors({
     if (!origin) return callback(null, true);
     if (allowedOrigins.length === 0) return callback(null, true);
     const normalizedOrigin = normalizeOriginValue(origin);
-    if (allowedOrigins.includes(normalizedOrigin)) {
+    if (allowedOrigins.includes(normalizedOrigin) || isTrustedFrontendOrigin(normalizedOrigin)) {
       return callback(null, true);
     }
     const corsError = new Error(`CORS policy does not allow access from origin ${origin}.`);
