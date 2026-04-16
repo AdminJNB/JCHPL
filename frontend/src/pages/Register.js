@@ -19,7 +19,7 @@ const Register = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { establishSession } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,13 +36,15 @@ const Register = () => {
     try {
       const response = await authAPI.register({ email, username, password, confirmPassword });
       if (response.data?.success) {
-        const loginResult = await login(username, password);
-        if (loginResult.success) {
+        const { token, user } = response.data?.data || {};
+
+        if (token && user) {
+          establishSession(token, user);
           navigate('/');
           return;
         }
 
-        setSuccess('Registration successful. Please login.');
+        setSuccess('Registration successful. Please sign in.');
         setTimeout(() => navigate('/login'), 1200);
       } else {
         setError(response.data?.message || 'Registration failed');

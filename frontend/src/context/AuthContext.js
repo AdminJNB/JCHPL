@@ -28,17 +28,21 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  const establishSession = (token, userData) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    setUser(userData);
+    setIsAuthenticated(true);
+  };
+
   const login = async (username, password) => {
     try {
       const response = await api.post('/auth/login', { username, password });
       const { token, user: userData } = response.data.data;
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(userData));
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
-      setUser(userData);
-      setIsAuthenticated(true);
+
+      establishSession(token, userData);
       
       return { success: true };
     } catch (error) {
@@ -106,6 +110,7 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     isAuthenticated,
+    establishSession,
     login,
     logout,
     updateProfile,
