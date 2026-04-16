@@ -39,9 +39,8 @@ import {
   MetricCard,
   PageHeader,
   SectionCard,
-  SelectionField,
 } from '../components/FuturisticUI';
-import { billingNameAPI, clientAPI, reportAPI, servicePeriodAPI, teamAPI } from '../services/api';
+import { reportAPI, servicePeriodAPI } from '../services/api';
 import { getFinancialYearPeriods, resolveDefaultFinancialYear } from '../utils/periods';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, ChartTooltip, Legend);
@@ -146,27 +145,16 @@ const Dashboard = () => {
     billingNameIds: [],
     reviewerIds: [],
   });
-  const [clients, setClients] = useState([]);
-  const [billingNames, setBillingNames] = useState([]);
-  const [reviewers, setReviewers] = useState([]);
   const [financialYears, setFinancialYears] = useState([]);
   const [allMonths, setAllMonths] = useState([]);
   const [selectedMonths, setSelectedMonths] = useState([]);
 
   useEffect(() => {
-    Promise.all([
-      clientAPI.getAll(),
-      billingNameAPI.getAll(),
-      teamAPI.getAll(),
-      servicePeriodAPI.getFinancialYears(),
-    ])
-      .then(([clientResponse, billingResponse, teamResponse, financialYearResponse]) => {
+    servicePeriodAPI.getFinancialYears()
+      .then((financialYearResponse) => {
         const loadedFinancialYears = financialYearResponse.data.data || [];
         const defaultFinancialYear = resolveDefaultFinancialYear(loadedFinancialYears);
 
-        setClients(clientResponse.data.data || []);
-        setBillingNames(billingResponse.data.data || []);
-        setReviewers((teamResponse.data.data || []).filter((teamMember) => teamMember.is_reviewer));
         setFinancialYears(loadedFinancialYears);
         setFilters((previous) => ({
           ...previous,
@@ -216,11 +204,6 @@ const Dashboard = () => {
   const visibleMonths = useMemo(
     () => allMonths.filter((month) => selectedMonths.includes(month.period)),
     [allMonths, selectedMonths],
-  );
-
-  const filteredBillingNames = useMemo(
-    () => billingNames.filter((billingName) => !filters.clientIds.length || filters.clientIds.includes(billingName.client_id)),
-    [billingNames, filters.clientIds],
   );
 
   const totals = useMemo(() => {
@@ -343,23 +326,6 @@ const Dashboard = () => {
       },
     },
   }), [theme]);
-
-  const financialYearOptions = financialYears.map((financialYear) => ({
-    value: financialYear,
-    label: financialYear,
-  }));
-
-  const clientOptions = clients.map((client) => ({ value: client.id, label: client.name }));
-  const billingOptions = filteredBillingNames.map((billingName) => ({ value: billingName.id, label: billingName.name }));
-  const reviewerOptions = reviewers.map((reviewer) => ({ value: reviewer.id, label: reviewer.name }));
-
-  const setArrayFilter = (key) => (nextValue) => {
-    setFilters((previous) => {
-      const next = { ...previous, [key]: nextValue };
-      if (key === 'clientIds') next.billingNameIds = previous.clientIds === nextValue ? previous.billingNameIds : [];
-      return next;
-    });
-  };
 
   const headerCellStyles = {
     py: 1,

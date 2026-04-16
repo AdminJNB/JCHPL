@@ -36,8 +36,6 @@ import {
   Receipt,
   Repeat,
   Settings,
-  PushPin,
-  PushPinOutlined,
   ChevronLeft,
   ChevronRight,
   AccountCircle,
@@ -91,14 +89,6 @@ const Layout = () => {
     const nestedMatch = menuItems.find((item) => item.children?.some((child) => location.pathname.startsWith(child.path)));
     return nestedMatch?.children?.find((child) => location.pathname.startsWith(child.path))?.title || 'JCHPL MIS';
   }, [location.pathname]);
-      const togglePin = () => {
-        setPinned((p) => {
-          const next = !p;
-          if (next) setCollapsed(false);
-          else setCollapsed(true);
-          return next;
-        });
-      };
 
   const isActive = (path) => (path === '/' ? location.pathname === '/' : location.pathname.startsWith(path));
   const isMastersActive = menuItems.find((item) => item.children)?.children?.some((child) => isActive(child.path));

@@ -4,7 +4,7 @@ import {
   DialogContent, DialogActions, IconButton, Typography, Chip, Alert,
   Table, TableBody, TableCell,
   TableHead, TableRow, Grid, Paper, Tooltip,
-  TableContainer, alpha, InputAdornment, CircularProgress,
+  TableContainer, alpha, InputAdornment,
   ToggleButton, ToggleButtonGroup
 } from '@mui/material';
 import {
@@ -583,10 +583,6 @@ const Clients = () => {
   const activeServiceTypes = useMemo(() => serviceTypes.filter(st => st.is_active !== false), [serviceTypes]);
   const activeBillFroms = useMemo(() => billFroms.filter(bf => bf.is_active !== false), [billFroms]);
   const activeBillingNameMasters = useMemo(() => billingNameMasters.filter(b => b.is_active !== false), [billingNameMasters]);
-  const getBillingNameMasterLabel = useCallback((name) => {
-    const match = activeBillingNameMasters.find((b) => b.name.toLowerCase().trim() === (name || '').toLowerCase().trim());
-    return match ? match.name : (name || '');
-  }, [activeBillingNameMasters]);
   const billingGroupOverallTotal = useMemo(
     () => billingGroupForm.service_types.reduce((sum, serviceType) => sum + sumBillFromAmounts(serviceType.bill_froms), 0),
     [billingGroupForm]
@@ -1000,20 +996,6 @@ const Clients = () => {
     setBillingGroupLockedBillFrom(false);
     setConflictingGroups([]);
     setError('');
-  };
-
-  const handleGroupFieldChange = (field, value) => {
-    setBillingGroupForm(prev => {
-      const updated = { ...prev, [field]: value };
-      if (field === 'gstin' && value) {
-        updated.pan = derivePanFromGstin(value.toUpperCase());
-      }
-      if (field === 'billing_name') {
-        // If manually changing name, clear the master ID
-        updated.billing_name_id = '';
-      }
-      return updated;
-    });
   };
 
   // Called when a billing name master is selected from the picker
