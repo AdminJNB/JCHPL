@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { pool } = require('./database/db');
+const { getConfiguredFrontendOrigins, normalizeOriginValue } = require('./config/frontend');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -34,31 +35,30 @@ if (missingEnv.length > 0) {
   process.exit(1);
 }
 
-if (process.env.NODE_ENV === 'production' && !process.env.FRONTEND_URL?.trim()) {
-  console.warn('FRONTEND_URL is not set. Production CORS will allow all origins until it is configured.');
-}
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 const startupRetries = Number(process.env.DB_STARTUP_RETRIES || 6);
 const startupRetryDelayMs = Number(process.env.DB_STARTUP_RETRY_DELAY_MS || 5000);
+const allowedOrigins = getConfiguredFrontendOrigins();
 
-const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, '').toLowerCase();
-const rawFrontendUrl = process.env.FRONTEND_URL?.trim();
-const allowedOrigins = rawFrontendUrl
-  ? rawFrontendUrl.split(',').map(normalizeOrigin).filter(Boolean)
-  : null;
+if (allowedOrigins.length > 0) {
+  console.log(`Configured frontend origins: ${allowedOrigins.join(', ')}`);
+} else if (process.env.NODE_ENV === 'production') {
+  console.warn('FRONTEND_URL/Frontend_URL is not set or invalid. Production CORS will allow all origins until it is configured.');
+}
 
 // Middleware
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (!allowedOrigins) return callback(null, true);
-    const normalizedOrigin = normalizeOrigin(origin);
+    if (allowedOrigins.length === 0) return callback(null, true);
+    const normalizedOrigin = normalizeOriginValue(origin);
     if (allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);
     }
-    return callback(new Error('CORS policy does not allow access from the specified Origin.'), false);
+    const corsError = new Error(`CORS policy does not allow access from origin ${origin}.`);
+    corsError.status = 403;
+    return callback(corsError, false);
   },
   credentials: true,
 }));
@@ -115,9 +115,11 @@ app.get('/api/health', async (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({
+  const statusCode = Number.isInteger(err.status) ? err.status : 500;
+  const message = statusCode >= 500 ? 'Internal server error' : err.message;
+  res.status(statusCode).json({
     success: false,
-    message: 'Internal server error',
+    message,
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });

@@ -7,10 +7,11 @@ const nodemailer = require('nodemailer');
 const { body, validationResult } = require('express-validator');
 const { pool, logAudit } = require('../database/db');
 const { auth } = require('../middleware/auth');
+const { getPrimaryFrontendOrigin } = require('../config/frontend');
 
 const emailConfigKeys = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'EMAIL_FROM'];
 const missingEmailConfig = emailConfigKeys.filter((key) => !process.env[key]?.trim());
-const frontendUrl = process.env.FRONTEND_URL?.trim()?.replace(/\/$/, '');
+const frontendUrl = getPrimaryFrontendOrigin();
 
 let transporter = null;
 
