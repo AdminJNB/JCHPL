@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { pool } = require('./database/db');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -91,8 +92,22 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get('/api/health', async (req, res) => {
+  try {
+    await pool.query('SELECT 1');
+    res.json({
+      status: 'OK',
+      database: 'OK',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Health check DB error:', error.message);
+    res.status(503).json({
+      status: 'DEGRADED',
+      database: 'ERROR',
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Error handling middleware
@@ -113,19 +128,31 @@ app.use((req, res) => {
   });
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV}`);
-});
-
-server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use. Stop the existing process or set a different PORT.`);
+async function startServer() {
+  try {
+    await pool.query('SELECT 1');
+    console.log('Database connectivity check passed');
+  } catch (error) {
+    console.error('Database connectivity check failed:', error.message);
     process.exit(1);
   }
 
-  console.error('Failed to start server:', err.message);
-  process.exit(1);
-});
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV}`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use. Stop the existing process or set a different PORT.`);
+      process.exit(1);
+    }
+
+    console.error('Failed to start server:', err.message);
+    process.exit(1);
+  });
+}
+
+startServer();
 
 module.exports = app;

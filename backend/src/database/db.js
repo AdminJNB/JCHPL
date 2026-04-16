@@ -13,7 +13,29 @@ const parseBoolean = (value) => {
   return ['1', 'true', 'yes', 'on'].includes(value.trim().toLowerCase());
 };
 
-const databaseUrl = process.env.DATABASE_URL?.trim();
+const sanitizeDatabaseUrl = (value) => {
+  if (!value) {
+    return '';
+  }
+
+  const trimmed = value.trim().replace(/^DATABASE_URL=/i, '');
+  const postgresMatch = trimmed.match(/postgres(?:ql)?:\/\/[^/\s'"]+\/[A-Za-z0-9._-]+(?:\?[^'"\s]*)?/i);
+  let normalized = postgresMatch ? postgresMatch[0] : trimmed;
+
+  const supabasePostgresIndex = normalized.toLowerCase().lastIndexOf('/postgres');
+  if (supabasePostgresIndex >= 0) {
+    normalized = normalized.slice(0, supabasePostgresIndex + '/postgres'.length);
+  }
+
+  const nestedHttpIndex = normalized.search(/https?:\/\//i);
+  if (nestedHttpIndex > 0) {
+    normalized = normalized.slice(0, nestedHttpIndex);
+  }
+
+  return normalized.trim().replace(/^['"]|['"]$/g, '');
+};
+
+const databaseUrl = sanitizeDatabaseUrl(process.env.DATABASE_URL);
 const connectionTargets = [databaseUrl, process.env.DB_HOST].filter(Boolean).join(' ').toLowerCase();
 const hostedDbProviders = ['supabase.co', 'render.com', 'render.internal', 'railway.app', 'railway.internal', 'neon.tech'];
 const isHostedPostgres = hostedDbProviders.some((provider) => connectionTargets.includes(provider));
@@ -75,4 +97,4 @@ async function logAudit(tableName, recordId, action, oldValues, newValues, userI
   }
 }
 
-module.exports = { pool, logAudit };
+module.exports = { pool, logAudit, sanitizeDatabaseUrl };
