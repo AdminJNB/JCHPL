@@ -1,13 +1,33 @@
 require('dotenv').config();
 const { Pool } = require('pg');
 
-const pool = new Pool({
+const parseBoolean = (value) => {
+  if (typeof value !== 'string') {
+    return Boolean(value);
+  }
+
+  return ['1', 'true', 'yes', 'on'].includes(value.trim().toLowerCase());
+};
+
+const databaseUrl = process.env.DATABASE_URL?.trim();
+const connectionTargets = [databaseUrl, process.env.DB_HOST].filter(Boolean).join(' ').toLowerCase();
+const hostedDbProviders = ['supabase.co', 'render.com', 'render.internal', 'railway.app', 'railway.internal', 'neon.tech'];
+const isHostedPostgres = hostedDbProviders.some((provider) => connectionTargets.includes(provider));
+const sslEnabled = process.env.DB_SSL === undefined ? isHostedPostgres : parseBoolean(process.env.DB_SSL);
+const rejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED === undefined
+  ? false
+  : parseBoolean(process.env.DB_SSL_REJECT_UNAUTHORIZED);
+const sslConfig = sslEnabled ? { rejectUnauthorized } : false;
+const connectionBaseConfig = databaseUrl ? {
+  connectionString: databaseUrl,
+  ssl: sslConfig,
+} : {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  database: 'postgres',
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-});
+  ssl: sslConfig,
+};
 
 const schema = `
 -- Create database
@@ -326,43 +346,61 @@ ON CONFLICT (period_code) DO NOTHING;
 `;
 
 async function initDatabase() {
-  const client = await pool.connect();
-  
+  if (databaseUrl) {
+    const appPool = new Pool(connectionBaseConfig);
+    const appClient = await appPool.connect();
+
+    try {
+      await appClient.query(schema);
+      console.log('Database schema initialized successfully via DATABASE_URL');
+      return;
+    } catch (error) {
+      console.error('Error initializing database:', error);
+      throw error;
+    } finally {
+      appClient.release();
+      await appPool.end();
+    }
+  }
+
+  const adminPool = new Pool({
+    ...connectionBaseConfig,
+    database: 'postgres',
+  });
+  const client = await adminPool.connect();
+
   try {
     // Create database if not exists
     const dbCheck = await client.query(
       "SELECT 1 FROM pg_database WHERE datname = 'jchpl_mis'"
     );
-    
+
     if (dbCheck.rows.length === 0) {
       await client.query('CREATE DATABASE jchpl_mis');
       console.log('Database jchpl_mis created successfully');
     }
-    
+
     // Connect to the new database
     const appPool = new Pool({
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
+      ...connectionBaseConfig,
       database: process.env.DB_NAME,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
     });
-    
+
     const appClient = await appPool.connect();
-    
+
     // Run schema
     await appClient.query(schema);
     console.log('Database schema initialized successfully');
-    
+
     appClient.release();
     await appPool.end();
-    
+
   } catch (error) {
     console.error('Error initializing database:', error);
     throw error;
   } finally {
     client.release();
-    await pool.end();
+    await adminPool.end();
   }
 }
 

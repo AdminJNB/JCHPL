@@ -8,15 +8,92 @@ const { body, validationResult } = require('express-validator');
 const { pool, logAudit } = require('../database/db');
 const { auth } = require('../middleware/auth');
 
-// Configure email transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+const emailConfigKeys = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'EMAIL_FROM'];
+const missingEmailConfig = emailConfigKeys.filter((key) => !process.env[key]?.trim());
+const frontendUrl = process.env.FRONTEND_URL?.trim()?.replace(/\/$/, '');
+
+let transporter = null;
+
+if (missingEmailConfig.length === 0) {
+  const smtpPort = Number(process.env.SMTP_PORT) || 587;
+  transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: smtpPort,
+    secure: smtpPort === 465,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+} else if (missingEmailConfig.length !== emailConfigKeys.length) {
+  console.warn(`[EMAIL WARN] Email features disabled. Missing env vars: ${missingEmailConfig.join(', ')}`);
+}
+
+if (transporter && !frontendUrl) {
+  console.warn('[EMAIL WARN] Password reset emails need FRONTEND_URL to build reset links.');
+}
+
+// Register
+router.post('/register', [
+  body('email').isEmail().withMessage('Valid email is required'),
+  body('username').trim().notEmpty().withMessage('Username is required'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('confirmPassword').custom((value, { req }) => value === req.body.password).withMessage('Passwords do not match'),
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        errors: errors.array()
+      });
+    }
+
+    const { email, username, password } = req.body;
+
+    const userExists = await pool.query(
+      'SELECT id FROM users WHERE username = $1 OR email = $2',
+      [username, email]
+    );
+
+    if (userExists.rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username or email already exists'
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const insertResult = await pool.query(
+      'INSERT INTO users (username, email, password_hash, name, mobile, is_active, can_delete) VALUES ($1, $2, $3, $4, $5, true, false) RETURNING id, username, email, name, mobile, can_delete',
+      [username, email, passwordHash, username, '']
+    );
+
+    const newUser = insertResult.rows[0];
+    const token = jwt.sign(
+      { userId: newUser.id, username: newUser.username },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
+    );
+
+    await logAudit('users', newUser.id, 'REGISTER', null, { username, email }, newUser.id);
+
+    res.json({
+      success: true,
+      message: 'Registration successful',
+      data: {
+        token,
+        user: newUser
+      }
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Registration failed'
+    });
+  }
 });
 
 // Login
@@ -133,25 +210,28 @@ router.post('/forgot-password', [
       [resetToken, resetTokenExpires, user.id]
     );
 
-    // Send email
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-    
-    try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_FROM,
-        to: email,
-        subject: 'Password Reset - JCHPL MIS',
-        html: `
-          <h2>Password Reset Request</h2>
-          <p>You requested a password reset for your JCHPL MIS account.</p>
-          <p>Click the link below to reset your password:</p>
-          <a href="${resetUrl}">${resetUrl}</a>
-          <p>This link expires in 1 hour.</p>
-          <p>If you didn't request this, please ignore this email.</p>
-        `
-      });
-    } catch (emailError) {
-      console.error('Email sending failed:', emailError);
+    const resetUrl = frontendUrl ? `${frontendUrl}/reset-password/${resetToken}` : null;
+
+    if (transporter && resetUrl) {
+      try {
+        await transporter.sendMail({
+          from: process.env.EMAIL_FROM,
+          to: email,
+          subject: 'Password Reset - JCHPL MIS',
+          html: `
+            <h2>Password Reset Request</h2>
+            <p>You requested a password reset for your JCHPL MIS account.</p>
+            <p>Click the link below to reset your password:</p>
+            <a href="${resetUrl}">${resetUrl}</a>
+            <p>This link expires in 1 hour.</p>
+            <p>If you didn't request this, please ignore this email.</p>
+          `
+        });
+      } catch (emailError) {
+        console.error('Email sending failed:', emailError);
+      }
+    } else {
+      console.warn('[EMAIL WARN] Skipping password reset email because SMTP or FRONTEND_URL is not fully configured.');
     }
 
     res.json({

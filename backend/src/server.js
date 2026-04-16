@@ -20,12 +20,43 @@ const expenseRoutes = require('./routes/expenses');
 const reportRoutes = require('./routes/reports');
 const userRoutes = require('./routes/users');
 
+const requiredEnv = ['JWT_SECRET'];
+
+if (!process.env.DATABASE_URL?.trim()) {
+  requiredEnv.push('DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD');
+}
+
+const missingEnv = requiredEnv.filter((key) => !process.env[key]?.trim());
+
+if (missingEnv.length > 0) {
+  console.error(`Missing required environment variables: ${missingEnv.join(', ')}`);
+  process.exit(1);
+}
+
+if (process.env.NODE_ENV === 'production' && !process.env.FRONTEND_URL?.trim()) {
+  console.warn('FRONTEND_URL is not set. Production CORS will allow all origins until it is configured.');
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, '').toLowerCase();
+const rawFrontendUrl = process.env.FRONTEND_URL?.trim();
+const allowedOrigins = rawFrontendUrl
+  ? rawFrontendUrl.split(',').map(normalizeOrigin).filter(Boolean)
+  : null;
+
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (!allowedOrigins) return callback(null, true);
+    const normalizedOrigin = normalizeOrigin(origin);
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS policy does not allow access from the specified Origin.'), false);
+  },
   credentials: true,
 }));
 app.use(express.json());

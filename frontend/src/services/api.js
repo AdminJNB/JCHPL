@@ -1,7 +1,21 @@
 import axios from 'axios';
 
+const normalizeApiBaseURL = (rawBaseURL) => {
+  const trimmed = rawBaseURL?.trim();
+
+  if (!trimmed) {
+    return '/api';
+  }
+
+  const withoutTrailingSlash = trimmed.replace(/\/+$/, '');
+  return /\/api$/i.test(withoutTrailingSlash) ? withoutTrailingSlash : `${withoutTrailingSlash}/api`;
+};
+
+// Accept either a backend root URL or an explicit /api URL from the env var.
+const baseURL = normalizeApiBaseURL(process.env.REACT_APP_API_URL);
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || '/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
