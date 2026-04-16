@@ -113,7 +113,10 @@ const Login = () => {
             </Button>
           </form>
 
-          <Box sx={{ textAlign: 'center' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+            <Link component={RouterLink} to="/register" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+              Create an account
+            </Link>
             <Link component={RouterLink} to="/forgot-password" underline="hover" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
               Forgot password?
             </Link>
