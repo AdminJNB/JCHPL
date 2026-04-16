@@ -40,6 +40,8 @@ if (process.env.NODE_ENV === 'production' && !process.env.FRONTEND_URL?.trim()) 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const startupRetries = Number(process.env.DB_STARTUP_RETRIES || 6);
+const startupRetryDelayMs = Number(process.env.DB_STARTUP_RETRY_DELAY_MS || 5000);
 
 const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, '').toLowerCase();
 const rawFrontendUrl = process.env.FRONTEND_URL?.trim();
@@ -129,12 +131,21 @@ app.use((req, res) => {
 });
 
 async function startServer() {
-  try {
-    await pool.query('SELECT 1');
-    console.log('Database connectivity check passed');
-  } catch (error) {
-    console.error('Database connectivity check failed:', error.message);
-    process.exit(1);
+  for (let attempt = 1; attempt <= startupRetries; attempt += 1) {
+    try {
+      await pool.query('SELECT 1');
+      console.log('Database connectivity check passed');
+      break;
+    } catch (error) {
+      const isLastAttempt = attempt === startupRetries;
+      console.error(`Database connectivity check failed (attempt ${attempt}/${startupRetries}): ${error.message}`);
+
+      if (isLastAttempt) {
+        process.exit(1);
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, startupRetryDelayMs));
+    }
   }
 
   const server = app.listen(PORT, () => {

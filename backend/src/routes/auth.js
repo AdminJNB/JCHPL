@@ -97,28 +97,31 @@ router.post('/register', [
 });
 
 // Login
-router.post('/login', [
-  body('username').notEmpty().withMessage('Username is required'),
-  body('password').notEmpty().withMessage('Password is required'),
-], async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    const username = typeof req.body?.username === 'string' ? req.body.username.trim() : '';
+    const password = typeof req.body?.password === 'string' ? req.body.password : '';
+
+    if (!username || !password) {
       return res.status(400).json({
         success: false,
-        errors: errors.array()
+        errors: [
+          !username ? { msg: 'Username is required', path: 'username' } : null,
+          !password ? { msg: 'Password is required', path: 'password' } : null,
+        ].filter(Boolean)
       });
     }
 
-    const { username, password } = req.body;
-
     // Find user by username or email
     const result = await pool.query(
-      'SELECT * FROM users WHERE (username = $1 OR email = $1) AND is_active = true',
+      `SELECT id, username, email, name, mobile, can_delete, is_active, password_hash
+       FROM users
+       WHERE LOWER(username) = LOWER($1) OR LOWER(email) = LOWER($1)
+       LIMIT 1`,
       [username]
     );
 
-    if (result.rows.length === 0) {
+    if (result.rows.length === 0 || result.rows[0].is_active !== true) {
       return res.status(401).json({
         success: false,
         message: 'Invalid username or password'
@@ -128,6 +131,14 @@ router.post('/login', [
     const user = result.rows[0];
 
     // Verify password
+    if (typeof user.password_hash !== 'string' || !user.password_hash) {
+      console.error(`Login error: missing password hash for user ${user.id}`);
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid username or password'
+      });
+    }
+
     const isValidPassword = await bcrypt.compare(password, user.password_hash);
     if (!isValidPassword) {
       return res.status(401).json({
@@ -186,7 +197,7 @@ router.post('/forgot-password', [
     const { email } = req.body;
 
     const result = await pool.query(
-      'SELECT * FROM users WHERE email = $1 AND is_active = true',
+      'SELECT id, email, is_active FROM users WHERE email = $1 AND is_active = true',
       [email]
     );
 
@@ -264,7 +275,9 @@ router.post('/reset-password', [
     const { token, password } = req.body;
 
     const result = await pool.query(
-      'SELECT * FROM users WHERE reset_token = $1 AND reset_token_expires > NOW() AND is_active = true',
+      `SELECT id, is_active
+       FROM users
+       WHERE reset_token = $1 AND reset_token_expires > NOW() AND is_active = true`,
       [token]
     );
 

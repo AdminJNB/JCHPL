@@ -44,13 +44,14 @@ const rejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED === undefined
   ? false
   : parseBoolean(process.env.DB_SSL_REJECT_UNAUTHORIZED);
 const sslConfig = sslEnabled ? { rejectUnauthorized } : false;
+const connectionTimeoutMillis = Number(process.env.DB_CONNECTION_TIMEOUT_MS || 10000);
 
 const poolConfig = databaseUrl ? {
   connectionString: databaseUrl,
   ssl: sslConfig,
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis,
 } : {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -60,7 +61,7 @@ const poolConfig = databaseUrl ? {
   ssl: sslConfig,
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis,
 };
 
 const pool = new Pool(poolConfig);
