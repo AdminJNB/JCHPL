@@ -455,6 +455,7 @@ const Expenses = () => {
       row.vendor_name,
       row.team_name,
       row.client_name,
+      row.reviewer_name,
       row.description,
       row.bill_from,
       row.service_period_name,
@@ -497,6 +498,7 @@ const Expenses = () => {
     { field: 'vendor_name', headerName: 'Vendor', flex: 0.8, minWidth: 130, renderCell: (params) => params.value || '-' },
     { field: 'team_name', headerName: 'Team', flex: 1, minWidth: 150, renderCell: (params) => params.value || '-' },
     { field: 'client_name', headerName: 'Group', flex: 1, minWidth: 150, renderCell: (params) => params.value || '-' },
+    { field: 'reviewer_name', headerName: 'Reviewer', flex: 1, minWidth: 150, renderCell: (params) => params.value || '-' },
     { field: 'description', headerName: 'Description', flex: 1.2, minWidth: 220, renderCell: (params) => params.value || '-' },
     { field: 'date', headerName: 'Book Date', width: 115, renderCell: (params) => params.value ? String(params.value).slice(0, 10) : '-' },
     { field: 'amount', headerName: 'Amount', width: 140, renderCell: (params) => formatCurrency(params.value) },
@@ -524,25 +526,33 @@ const Expenses = () => {
       headerName: 'Actions',
       width: 120,
       sortable: false,
-      renderCell: (params) => (
-        <Box>
-          <IconButton size="small" color="primary" onClick={() => openDialog(params.row)}>
-            <Edit fontSize="small" />
-          </IconButton>
-          {user?.can_delete && params.row.source_type === 'non-recurring' && (
-            <IconButton
-              size="small"
-              color="error"
-              onClick={() => {
-                setSelected(params.row);
-                setDeleteDialogOpen(true);
-              }}
-            >
-              <Delete fontSize="small" />
-            </IconButton>
-          )}
-        </Box>
-      ),
+      renderCell: (params) => {
+        const isPendingTeamAllocationRow = params.row.source_type === 'team-recurring'
+          && params.row.is_admin
+          && !params.row.team_client_allocation_id;
+
+        return (
+          <Box>
+            {!isPendingTeamAllocationRow && (
+              <IconButton size="small" color="primary" onClick={() => openDialog(params.row)}>
+                <Edit fontSize="small" />
+              </IconButton>
+            )}
+            {user?.can_delete && params.row.source_type === 'non-recurring' && (
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => {
+                  setSelected(params.row);
+                  setDeleteDialogOpen(true);
+                }}
+              >
+                <Delete fontSize="small" />
+              </IconButton>
+            )}
+          </Box>
+        );
+      },
     },
   ];
 
@@ -673,7 +683,7 @@ const Expenses = () => {
           <Grid item xs={12} md={2.4}>
             <TextField
               fullWidth
-              placeholder="Search expense, team, client, or period"
+              placeholder="Search expense, team, group, reviewer, or period"
               value={filters.search}
               onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
               InputProps={{ startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} /> }}

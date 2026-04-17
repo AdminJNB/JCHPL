@@ -2,6 +2,7 @@ const FRONTEND_ENV_KEYS = ['FRONTEND_URLS', 'FRONTEND_URL', 'Frontend_URL', 'COR
 const PLACEHOLDER_ORIGIN_PATTERN = /(your-frontend|example\.com)/i;
 const DEFAULT_FRONTEND_ORIGINS = ['https://jchpl-frontend.vercel.app'];
 const TRUSTED_VERCEL_ORIGIN_PATTERN = /^https:\/\/jchpl-frontend(?:-[a-z0-9-]+)?\.vercel\.app$/i;
+const TRUSTED_LOCAL_ORIGIN_PATTERN = /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/i;
 
 const stripWrappingQuotes = (value) => value.replace(/^['"]|['"]$/g, '');
 
@@ -39,7 +40,9 @@ const splitConfiguredOrigins = (value) => String(value || '')
 
 const isTrustedFrontendOrigin = (origin) => {
   const normalizedOrigin = normalizeOriginValue(origin);
-  return DEFAULT_FRONTEND_ORIGINS.includes(normalizedOrigin) || TRUSTED_VERCEL_ORIGIN_PATTERN.test(normalizedOrigin);
+  return DEFAULT_FRONTEND_ORIGINS.includes(normalizedOrigin)
+    || TRUSTED_VERCEL_ORIGIN_PATTERN.test(normalizedOrigin)
+    || TRUSTED_LOCAL_ORIGIN_PATTERN.test(normalizedOrigin);
 };
 
 const getConfiguredFrontendOrigins = (env = process.env) => {

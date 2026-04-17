@@ -108,6 +108,8 @@ const summarizeTeamCompensationRows = async (dbClient, teamId, rows = []) => {
       tca.id,
       tca.client_id,
       c.name AS client_name,
+      tca.reviewer_id,
+      rv.name AS reviewer_name,
       tca.allocation_percentage,
       tca.allocation_amount,
       tca.allocation_method,
@@ -117,6 +119,7 @@ const summarizeTeamCompensationRows = async (dbClient, teamId, rows = []) => {
       tca.end_period
     FROM team_client_allocations tca
     LEFT JOIN clients c ON c.id = tca.client_id
+    LEFT JOIN teams rv ON rv.id = tca.reviewer_id
     LEFT JOIN expense_heads eh ON eh.id = tca.expense_head_id
     WHERE tca.team_id = $1
     ORDER BY c.name

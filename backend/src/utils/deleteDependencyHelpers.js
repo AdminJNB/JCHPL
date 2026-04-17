@@ -1,4 +1,5 @@
 const MAX_LINKED_ITEMS = 12;
+const MISSING_SCHEMA_ERROR_CODES = new Set(['42P01', '42703']);
 
 const safeText = (value, fallback = '-') => {
   if (value === null || value === undefined) return fallback;
@@ -12,16 +13,29 @@ const formatPeriodRange = (startPeriod, endPeriod) => {
   return endPeriod ? `${start} to ${endPeriod}` : `${start} to Open`;
 };
 
-const queryLinkedRows = async (dbClient, sql, params = []) => {
-  const result = await dbClient.query(sql, [...params, MAX_LINKED_ITEMS]);
-  const totalCount = result.rows.length > 0
-    ? parseInt(result.rows[0].total_count, 10) || 0
-    : 0;
+const isMissingSchemaError = (error) => MISSING_SCHEMA_ERROR_CODES.has(error?.code);
 
-  return {
-    count: totalCount,
-    rows: result.rows,
-  };
+const queryLinkedRows = async (dbClient, sql, params = [], options = {}) => {
+  try {
+    const result = await dbClient.query(sql, [...params, MAX_LINKED_ITEMS]);
+    const totalCount = result.rows.length > 0
+      ? parseInt(result.rows[0].total_count, 10) || 0
+      : 0;
+
+    return {
+      count: totalCount,
+      rows: result.rows,
+    };
+  } catch (error) {
+    if (options.ignoreMissingSchema && isMissingSchemaError(error)) {
+      return {
+        count: 0,
+        rows: [],
+      };
+    }
+
+    throw error;
+  }
 };
 
 const buildLinkedItem = ({
@@ -78,6 +92,7 @@ module.exports = {
   safeText,
   formatPeriodRange,
   queryLinkedRows,
+  isMissingSchemaError,
   buildLinkedItem,
   buildDependencyEntry,
   buildDeleteBlockedMessage,

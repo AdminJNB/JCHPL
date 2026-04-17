@@ -25,10 +25,23 @@ const {
   buildLinkedItem,
   formatPeriodRange,
   queryLinkedRows,
+  isMissingSchemaError,
   safeText,
 } = require('../utils/deleteDependencyHelpers');
 
 let teamSchemaPromise = null;
+
+const runOptionalTeamCleanupQuery = async (dbClient, sql, params = []) => {
+  try {
+    await dbClient.query(sql, params);
+  } catch (error) {
+    if (isMissingSchemaError(error)) {
+      return;
+    }
+
+    throw error;
+  }
+};
 
 async function ensureTeamSchema() {
   if (!teamSchemaPromise) {
@@ -56,6 +69,10 @@ async function ensureTeamSchema() {
       `);
 
       await pool.query('CREATE INDEX IF NOT EXISTS idx_team_increment_history_team ON team_increment_history(team_id)');
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_teams_name_lookup
+        ON teams (LOWER(TRIM(name)));
+      `);
 
       // Add expense_head_id per client allocation
       await pool.query(`
@@ -63,6 +80,7 @@ async function ensureTeamSchema() {
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           team_id UUID REFERENCES teams(id) ON DELETE CASCADE,
           client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
+          reviewer_id UUID REFERENCES teams(id),
           allocation_percentage DECIMAL(8,4) NOT NULL DEFAULT 0,
           allocation_amount DECIMAL(15,2),
           allocation_method VARCHAR(20) DEFAULT 'percentage',
@@ -73,7 +91,8 @@ async function ensureTeamSchema() {
       `);
       await pool.query(`
         ALTER TABLE team_client_allocations
-          ADD COLUMN IF NOT EXISTS expense_head_id UUID REFERENCES expense_heads(id);
+          ADD COLUMN IF NOT EXISTS expense_head_id UUID REFERENCES expense_heads(id),
+          ADD COLUMN IF NOT EXISTS reviewer_id UUID REFERENCES teams(id);
       `).catch(() => {});
 
       await ensureTeamAllocationPeriodColumns(pool);
@@ -298,11 +317,82 @@ const compensationRowsToPayload = (rows) => {
 
 const getTeamActiveStatus = (endPeriod) => !endPeriod;
 
+const normalizeTeamName = (value = '') => String(value).trim().replace(/\s+/g, ' ');
+const normalizeTeamMobile = (value = '') => String(value).replace(/\D+/g, '');
+const normalizeTeamEmail = (value = '') => String(value).trim().toLowerCase();
+
+const findDuplicateTeamName = async (dbClient, name, excludeId = null) => {
+  const normalizedName = normalizeTeamName(name);
+  if (!normalizedName) return null;
+
+  const params = [normalizedName];
+  let query = `
+    SELECT id, name
+    FROM teams
+    WHERE LOWER(REGEXP_REPLACE(TRIM(name), '\\s+', ' ', 'g')) = LOWER(REGEXP_REPLACE(TRIM($1), '\\s+', ' ', 'g'))
+  `;
+
+  if (excludeId) {
+    params.push(excludeId);
+    query += ` AND id <> $2`;
+  }
+
+  query += ' LIMIT 1';
+  const result = await dbClient.query(query, params);
+  return result.rows[0] || null;
+};
+
+const findDuplicateTeamMobile = async (dbClient, mobile, excludeId = null) => {
+  const normalizedMobile = normalizeTeamMobile(mobile);
+  if (!normalizedMobile) return null;
+
+  const params = [normalizedMobile];
+  let query = `
+    SELECT id, name, mobile
+    FROM teams
+    WHERE REGEXP_REPLACE(COALESCE(mobile, ''), '\\D', '', 'g') = $1
+  `;
+
+  if (excludeId) {
+    params.push(excludeId);
+    query += ` AND id <> $2`;
+  }
+
+  query += ' LIMIT 1';
+  const result = await dbClient.query(query, params);
+  return result.rows[0] || null;
+};
+
+const findDuplicateTeamEmail = async (dbClient, email, excludeId = null) => {
+  const normalizedEmail = normalizeTeamEmail(email);
+  if (!normalizedEmail) return null;
+
+  const params = [normalizedEmail];
+  let query = `
+    SELECT id, name, email
+    FROM teams
+    WHERE LOWER(TRIM(COALESCE(email, ''))) = $1
+  `;
+
+  if (excludeId) {
+    params.push(excludeId);
+    query += ` AND id <> $2`;
+  }
+
+  query += ' LIMIT 1';
+  const result = await dbClient.query(query, params);
+  return result.rows[0] || null;
+};
+
+const getDuplicateTeamFieldMessage = (fieldLabel, team) =>
+  `${fieldLabel} already exists in ${team?.name || 'another team'}`;
+
 const loadTeamAllocationRows = async (dbClient, teamId) => {
   const result = await dbClient.query(`
     SELECT
       tca.id,
       tca.client_id,
+      tca.reviewer_id,
       tca.allocation_percentage,
       tca.allocation_amount,
       tca.allocation_method,
@@ -310,9 +400,11 @@ const loadTeamAllocationRows = async (dbClient, teamId) => {
       tca.start_period,
       tca.end_period,
       c.name as client_name,
+      rv.name as reviewer_name,
       eh.name as expense_head_name
     FROM team_client_allocations tca
     LEFT JOIN clients c ON tca.client_id = c.id
+    LEFT JOIN teams rv ON tca.reviewer_id = rv.id
     LEFT JOIN expense_heads eh ON tca.expense_head_id = eh.id
     WHERE tca.team_id = $1
     ORDER BY c.name, tca.start_period, tca.id
@@ -337,7 +429,8 @@ const toIncrementHistoryRows = (events = []) =>
     amount: row.amount,
   }));
 
-const getAllocationKey = (allocation) => `${allocation.client_id}||${allocation.expense_head_id || ''}`;
+const getAllocationKey = (allocation) =>
+  `${allocation.client_id}||${allocation.reviewer_id || ''}||${allocation.expense_head_id || ''}`;
 
 const roundAmount = roundCurrency;
 const roundAllocationPercentage = roundPercentage;
@@ -347,6 +440,7 @@ const normalizeDesiredAllocations = (allocations = [], periodAmount = 0) => {
     .filter((allocation) => allocation && allocation.client_id)
     .map((allocation) => ({
       client_id: allocation.client_id,
+      reviewer_id: allocation.reviewer_id || null,
       expense_head_id: allocation.expense_head_id || null,
       allocation_percentage: roundAllocationPercentage(allocation.allocation_percentage),
       allocation_amount:
@@ -439,9 +533,16 @@ const validateDesiredAllocations = ({ allocations, periodAmount, label = 'Client
     return { allocations: [] };
   }
 
+  const missingReviewerIndex = (Array.isArray(allocations) ? allocations : []).findIndex(
+    (allocation) => allocation && allocation.client_id && !allocation.reviewer_id
+  );
+  if (missingReviewerIndex !== -1) {
+    return { error: `Reviewer is required for allocation row #${missingReviewerIndex + 1}` };
+  }
+
   const allocationKeys = cleanedAllocations.map(getAllocationKey);
   if (new Set(allocationKeys).size !== allocationKeys.length) {
-    return { error: 'Duplicate client + expense head combination found in allocations' };
+    return { error: 'Duplicate group + reviewer + expense head combination found in allocations' };
   }
 
   const normalized = normalizeDesiredAllocations(cleanedAllocations, periodAmount);
@@ -491,12 +592,13 @@ const normalizeAllocationSignature = (allocations = []) =>
     .filter((allocation) => allocation && allocation.client_id)
     .map((allocation) => ({
       client_id: allocation.client_id,
+      reviewer_id: allocation.reviewer_id || null,
       expense_head_id: allocation.expense_head_id || null,
       allocation_amount: roundAmount(getStoredTeamAllocationAmount(allocation)),
     }))
     .sort((left, right) =>
-      `${left.client_id}||${left.expense_head_id || ''}`.localeCompare(
-        `${right.client_id}||${right.expense_head_id || ''}`
+      `${left.client_id}||${left.reviewer_id || ''}||${left.expense_head_id || ''}`.localeCompare(
+        `${right.client_id}||${right.reviewer_id || ''}||${right.expense_head_id || ''}`
       )
     );
 
@@ -508,6 +610,7 @@ const sameAllocationSet = (left = [], right = []) => {
   return normalizedLeft.every((allocation, index) => {
     const nextAllocation = normalizedRight[index];
     return allocation.client_id === nextAllocation.client_id &&
+      allocation.reviewer_id === nextAllocation.reviewer_id &&
       allocation.expense_head_id === nextAllocation.expense_head_id &&
       allocation.allocation_amount === nextAllocation.allocation_amount;
   });
@@ -728,7 +831,7 @@ const syncTeamAllocationRowsForPeriod = async ({
   if (!periodRow?.start_period) return;
 
   const existingResult = await dbClient.query(`
-    SELECT id, client_id, allocation_percentage, allocation_amount, allocation_method, expense_head_id, start_period, end_period
+    SELECT id, client_id, reviewer_id, allocation_percentage, allocation_amount, allocation_method, expense_head_id, start_period, end_period
     FROM team_client_allocations
     WHERE team_id = $1
       AND start_period = $2
@@ -742,6 +845,7 @@ const syncTeamAllocationRowsForPeriod = async ({
     .filter((allocation) => allocation && allocation.client_id)
     .map((allocation) => ({
       client_id: allocation.client_id,
+      reviewer_id: allocation.reviewer_id || null,
       allocation_percentage: parseFloat(allocation.allocation_percentage) || 0,
       allocation_amount: roundAmount(allocation.allocation_amount),
       allocation_method: normalizeAllocationMethod(allocation.allocation_method),
@@ -762,14 +866,16 @@ const syncTeamAllocationRowsForPeriod = async ({
             allocation_amount = $2,
             allocation_method = $3,
             expense_head_id = $4,
-            start_period = $5,
-            end_period = $6
-        WHERE id = $7
+            reviewer_id = $5,
+            start_period = $6,
+            end_period = $7
+        WHERE id = $8
       `, [
         allocation.allocation_percentage,
         allocation.allocation_amount,
         allocation.allocation_method,
         allocation.expense_head_id,
+        allocation.reviewer_id,
         periodRow.start_period,
         periodRow.end_period || null,
         existing.id,
@@ -777,12 +883,13 @@ const syncTeamAllocationRowsForPeriod = async ({
     } else {
       await dbClient.query(`
         INSERT INTO team_client_allocations (
-          team_id, client_id, allocation_percentage, allocation_amount, allocation_method, expense_head_id, start_period, end_period
+          team_id, client_id, reviewer_id, allocation_percentage, allocation_amount, allocation_method, expense_head_id, start_period, end_period
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       `, [
         teamId,
         allocation.client_id,
+        allocation.reviewer_id,
         allocation.allocation_percentage,
         allocation.allocation_amount,
         allocation.allocation_method,
@@ -831,6 +938,8 @@ router.get('/', auth, async (req, res) => {
                  'id', tca.id,
                  'client_id', tca.client_id,
                  'client_name', c.name,
+                 'reviewer_id', tca.reviewer_id,
+                 'reviewer_name', rv.name,
                  'allocation_percentage', tca.allocation_percentage,
                  'allocation_amount', tca.allocation_amount,
                  'allocation_method', tca.allocation_method,
@@ -842,6 +951,7 @@ router.get('/', auth, async (req, res) => {
                )
                FROM team_client_allocations tca
                LEFT JOIN clients c ON tca.client_id = c.id
+               LEFT JOIN teams rv ON tca.reviewer_id = rv.id
                LEFT JOIN expense_heads eh2 ON tca.expense_head_id = eh2.id
                WHERE tca.team_id = t.id
              ), '[]') as client_allocations,
@@ -945,6 +1055,7 @@ router.get('/:id', auth, async (req, res) => {
       SELECT
         tca.id,
         tca.client_id,
+        tca.reviewer_id,
         tca.allocation_percentage,
         tca.allocation_amount,
         tca.allocation_method,
@@ -952,9 +1063,11 @@ router.get('/:id', auth, async (req, res) => {
         tca.start_period,
         tca.end_period,
         c.name as client_name,
+        rv.name as reviewer_name,
         eh.name as expense_head_name
       FROM team_client_allocations tca
       JOIN clients c ON tca.client_id = c.id
+      LEFT JOIN teams rv ON tca.reviewer_id = rv.id
       LEFT JOIN expense_heads eh ON tca.expense_head_id = eh.id
       WHERE tca.team_id = $1
       ORDER BY c.name, tca.start_period, tca.id
@@ -1022,6 +1135,9 @@ router.post('/', auth, [
       name, mobile, email, is_reviewer, is_admin, expense_head_id, amount, start_period,
       increment_period, end_period, client_allocations, increment_events, compensation_rows
     } = req.body;
+    const normalizedName = normalizeTeamName(name);
+    const normalizedMobile = normalizeTeamMobile(mobile);
+    const normalizedEmail = normalizeTeamEmail(email);
     const cleanedAllocations = Array.isArray(client_allocations)
       ? client_allocations.filter((alloc) => alloc && alloc.client_id)
       : [];
@@ -1086,6 +1202,27 @@ router.post('/', auth, [
       return res.status(400).json({ success: false, message: normalizedLiveAllocations.error });
     }
 
+    const duplicateTeam = await findDuplicateTeamName(client, normalizedName);
+    if (duplicateTeam) {
+      return res.status(400).json({ success: false, message: 'Team name already exists' });
+    }
+
+    const duplicateMobile = await findDuplicateTeamMobile(client, normalizedMobile);
+    if (duplicateMobile) {
+      return res.status(400).json({
+        success: false,
+        message: getDuplicateTeamFieldMessage('Mobile number', duplicateMobile),
+      });
+    }
+
+    const duplicateEmail = await findDuplicateTeamEmail(client, normalizedEmail);
+    if (duplicateEmail) {
+      return res.status(400).json({
+        success: false,
+        message: getDuplicateTeamFieldMessage('Email ID', duplicateEmail),
+      });
+    }
+
     await client.query('BEGIN');
 
     // Create team member
@@ -1093,7 +1230,7 @@ router.post('/', auth, [
       `INSERT INTO teams (name, mobile, email, is_reviewer, is_admin, expense_type, expense_head_id, amount, start_period, increment_period, end_period, is_active) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
       [
-        name, mobile || null, email || null, is_reviewer || false, is_admin || false, 'non-recurring',
+        normalizedName, normalizedMobile || null, normalizedEmail || null, is_reviewer || false, is_admin || false, 'non-recurring',
         expense_head_id || null, finalAmount || null, finalStartPeriod || null, finalIncrementPeriod || null, finalEndPeriod || null,
         getTeamActiveStatus(finalEndPeriod)
       ]
@@ -1106,12 +1243,13 @@ router.post('/', auth, [
       for (const alloc of normalizedLiveAllocations.allocations) {
         await client.query(
           `INSERT INTO team_client_allocations (
-             team_id, client_id, allocation_percentage, allocation_amount, allocation_method, expense_head_id, start_period, end_period
+             team_id, client_id, reviewer_id, allocation_percentage, allocation_amount, allocation_method, expense_head_id, start_period, end_period
            )
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
           [
             team.id,
             alloc.client_id,
+            alloc.reviewer_id || null,
             alloc.allocation_percentage,
             alloc.allocation_amount,
             alloc.allocation_method,
@@ -1202,6 +1340,9 @@ router.put('/:id', auth, [
       increment_period, end_period, client_allocations, increment_events, compensation_rows
     } = req.body;
     const { id } = req.params;
+    const normalizedName = name !== undefined ? normalizeTeamName(name) : undefined;
+    const normalizedMobile = mobile !== undefined ? normalizeTeamMobile(mobile) : undefined;
+    const normalizedEmail = email !== undefined ? normalizeTeamEmail(email) : undefined;
     const cleanedAllocations = Array.isArray(client_allocations)
       ? client_allocations.filter((alloc) => alloc && alloc.client_id)
       : client_allocations;
@@ -1215,6 +1356,36 @@ router.put('/:id', auth, [
         success: false,
         message: 'Team member not found'
       });
+    }
+
+    if (normalizedName !== undefined) {
+      const duplicateTeam = await findDuplicateTeamName(dbClient, normalizedName, id);
+      if (duplicateTeam) {
+        return res.status(400).json({
+          success: false,
+          message: 'Team name already exists'
+        });
+      }
+    }
+
+    if (normalizedMobile) {
+      const duplicateMobile = await findDuplicateTeamMobile(dbClient, normalizedMobile, id);
+      if (duplicateMobile) {
+        return res.status(400).json({
+          success: false,
+          message: getDuplicateTeamFieldMessage('Mobile number', duplicateMobile)
+        });
+      }
+    }
+
+    if (normalizedEmail) {
+      const duplicateEmail = await findDuplicateTeamEmail(dbClient, normalizedEmail, id);
+      if (duplicateEmail) {
+        return res.status(400).json({
+          success: false,
+          message: getDuplicateTeamFieldMessage('Email ID', duplicateEmail)
+        });
+      }
     }
 
     let finalAmount = amount !== undefined ? amount : current.rows[0].amount;
@@ -1246,20 +1417,15 @@ router.put('/:id', auth, [
       });
     }
 
-    // Validate allocations sum to 100 if provided
     if (cleanedAllocations && cleanedAllocations.length > 0) {
-      const totalAllocation = cleanedAllocations.reduce((sum, a) => sum + parseFloat(a.allocation_percentage || 0), 0);
-      if (Math.abs(totalAllocation - 100) > 0.01) {
+      const validatedAllocations = validateDesiredAllocations({
+        allocations: cleanedAllocations,
+        periodAmount: finalAmount !== undefined ? finalAmount : current.rows[0].amount,
+      });
+      if (validatedAllocations.error) {
         return res.status(400).json({
           success: false,
-          message: `Client allocations must total 100% (current: ${totalAllocation}%)`
-        });
-      }
-      const allocKeys = cleanedAllocations.map(getAllocationKey);
-      if (new Set(allocKeys).size !== allocKeys.length) {
-        return res.status(400).json({
-          success: false,
-          message: 'Duplicate client + expense head combination found in allocations'
+          message: validatedAllocations.error
         });
       }
     }
@@ -1292,6 +1458,7 @@ router.put('/:id', auth, [
     const currentAllocationRows = await loadTeamAllocationRows(dbClient, id);
     const currentActiveAllocations = getActiveClientAllocations(currentAllocationRows, currentCompensationRows).map((allocation) => ({
       client_id: allocation.client_id,
+      reviewer_id: allocation.reviewer_id || null,
       allocation_percentage: allocation.allocation_percentage,
       expense_head_id: allocation.expense_head_id || null,
     }));
@@ -1310,6 +1477,7 @@ router.put('/:id', auth, [
     const desiredActiveAllocations = cleanedAllocations !== undefined
       ? cleanedAllocations.map((allocation) => ({
           client_id: allocation.client_id,
+          reviewer_id: allocation.reviewer_id || null,
           allocation_percentage: parseFloat(allocation.allocation_percentage) || 0,
           expense_head_id: allocation.expense_head_id || null,
         }))
@@ -1344,15 +1512,15 @@ router.put('/:id', auth, [
 
     if (name !== undefined) {
       updates.push(`name = $${paramIndex++}`);
-      values.push(name);
+      values.push(normalizedName);
     }
     if (mobile !== undefined) {
       updates.push(`mobile = $${paramIndex++}`);
-      values.push(mobile || null);
+      values.push(normalizedMobile || null);
     }
     if (email !== undefined) {
       updates.push(`email = $${paramIndex++}`);
-      values.push(email || null);
+      values.push(normalizedEmail || null);
     }
     if (is_reviewer !== undefined) {
       updates.push(`is_reviewer = $${paramIndex++}`);
@@ -1546,7 +1714,23 @@ const getTeamDependencies = async (dbClient, id) => {
     WHERE ret.team_id = $1
     ORDER BY re.start_period NULLS LAST, eh.name NULLS LAST, v.name NULLS LAST
     LIMIT $2
-  `, [id]);
+  `, [id], { ignoreMissingSchema: true });
+
+  const teamReviewerAllocationResult = await queryLinkedRows(dbClient, `
+    SELECT
+      tca.id,
+      COUNT(*) OVER() AS total_count,
+      owner.name AS team_name,
+      c.name AS group_name,
+      tca.start_period,
+      tca.end_period
+    FROM team_client_allocations tca
+    JOIN teams owner ON owner.id = tca.team_id
+    LEFT JOIN clients c ON c.id = tca.client_id
+    WHERE tca.reviewer_id = $1
+    ORDER BY owner.name NULLS LAST, c.name NULLS LAST, tca.start_period NULLS LAST
+    LIMIT $2
+  `, [id], { ignoreMissingSchema: true });
 
   const dependencies = [
     buildDependencyEntry({
@@ -1586,6 +1770,19 @@ const getTeamDependencies = async (dbClient, id) => {
         line: `Recurring period: ${formatPeriodRange(row.start_period, row.end_period)}`,
         module: 'recurring',
         type: 'Recurring Team Line',
+      }),
+    }),
+    buildDependencyEntry({
+      type: 'Team Allocation Reviewer',
+      module: 'teams',
+      count: teamReviewerAllocationResult.count,
+      rows: teamReviewerAllocationResult.rows,
+      mapRow: (row) => buildLinkedItem({
+        id: row.id,
+        label: `${safeText(row.team_name, 'No team')} | ${safeText(row.group_name, 'Unassigned group')}`,
+        line: `Allocation period: ${formatPeriodRange(row.start_period, row.end_period)}`,
+        module: 'teams',
+        type: 'Team Allocation Reviewer',
       }),
     }),
   ].filter(Boolean);
@@ -1631,15 +1828,16 @@ router.delete('/:id', auth, requireDelete, async (req, res) => {
 
     // Hard delete: remove all references, then team
     await dbClient.query('BEGIN');
-    await dbClient.query('UPDATE client_billing_rows SET reviewer_id = null WHERE reviewer_id = $1', [id]);
-    await dbClient.query('UPDATE client_billing_row_history SET reviewer_id = null WHERE reviewer_id = $1', [id]);
-    await dbClient.query('UPDATE revenues SET reviewer_id = null WHERE reviewer_id = $1', [id]);
-    await dbClient.query('UPDATE expenses SET team_id = null, reviewer_id = null WHERE team_id = $1 OR reviewer_id = $1', [id]);
-    await dbClient.query('UPDATE recurring_expense_clients SET reviewer_id = null WHERE reviewer_id = $1', [id]);
-    await dbClient.query('DELETE FROM fee_reviewer_allocations WHERE reviewer_id = $1', [id]);
-    await dbClient.query('DELETE FROM revenue_reviewer_allocations WHERE reviewer_id = $1', [id]);
-    await dbClient.query('DELETE FROM team_client_allocations WHERE team_id = $1', [id]);
-    await dbClient.query('DELETE FROM team_increment_history WHERE team_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'UPDATE client_billing_rows SET reviewer_id = null WHERE reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'UPDATE client_billing_row_history SET reviewer_id = null WHERE reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'UPDATE revenues SET reviewer_id = null WHERE reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'UPDATE expenses SET team_id = null, reviewer_id = null WHERE team_id = $1 OR reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'UPDATE recurring_expense_clients SET reviewer_id = null WHERE reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'UPDATE team_client_allocations SET reviewer_id = null WHERE reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'DELETE FROM fee_reviewer_allocations WHERE reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'DELETE FROM revenue_reviewer_allocations WHERE reviewer_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'DELETE FROM team_client_allocations WHERE team_id = $1', [id]);
+    await runOptionalTeamCleanupQuery(dbClient, 'DELETE FROM team_increment_history WHERE team_id = $1', [id]);
     await dbClient.query('DELETE FROM teams WHERE id = $1', [id]);
     await dbClient.query('COMMIT');
     
@@ -1739,15 +1937,16 @@ router.put('/:id/compensation-period', auth, async (req, res) => {
     // Update allocations if provided
     if (Array.isArray(client_allocations)) {
       const cleanedAllocations = client_allocations.filter((a) => a && a.client_id);
-      if (cleanedAllocations.length > 0) {
-        const totalAllocation = cleanedAllocations.reduce((sum, a) => sum + (parseFloat(a.allocation_percentage) || 0), 0);
-        if (Math.abs(totalAllocation - 100) > 0.01) {
-          await dbClient.query('ROLLBACK');
-          return res.status(400).json({
-            success: false,
-            message: `Client allocations must total 100% (current: ${totalAllocation.toFixed(2)}%)`
-          });
-        }
+      const validatedAllocations = validateDesiredAllocations({
+        allocations: cleanedAllocations,
+        periodAmount: amount !== undefined ? amount : currentCompensationRows[matchedIndex]?.amount,
+      });
+      if (validatedAllocations.error) {
+        await dbClient.query('ROLLBACK');
+        return res.status(400).json({
+          success: false,
+          message: validatedAllocations.error
+        });
       }
 
       await syncTeamAllocationRowsForPeriod({

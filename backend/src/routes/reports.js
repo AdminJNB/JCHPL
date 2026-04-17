@@ -42,10 +42,137 @@ const buildTeamAllocationAmountExpr = (allocationAlias = 'tca', teamAlias = 't',
   )`;
 const buildTeamAllocationExistsExpr = (allocationAlias = 'tca') =>
   `(COALESCE(${allocationAlias}.allocation_amount, 0) > 0 OR COALESCE(${allocationAlias}.allocation_percentage, 0) > 0)`;
+const buildTeamAssignedAllocationExpr = (allocationAlias = 'tca') =>
+  `(${buildTeamAllocationExistsExpr(allocationAlias)} AND ${allocationAlias}.client_id IS NOT NULL AND ${allocationAlias}.reviewer_id IS NOT NULL)`;
 
 async function ensureReportsSchema() {
   if (!reportsSchemaPromise) {
-    reportsSchemaPromise = ensureTeamAllocationPeriodColumns(pool).catch((error) => {
+    reportsSchemaPromise = (async () => {
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS client_billing_rows (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
+          billing_name VARCHAR(255) NOT NULL,
+          pan VARCHAR(10),
+          gstin VARCHAR(15),
+          service_type_id UUID REFERENCES service_types(id),
+          bill_from_id UUID,
+          reviewer_id UUID REFERENCES teams(id),
+          start_period VARCHAR(10) NOT NULL,
+          end_period VARCHAR(10),
+          amount DECIMAL(15, 2) NOT NULL DEFAULT 0,
+          is_active BOOLEAN DEFAULT true,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      await pool.query(`
+        ALTER TABLE revenues
+          ADD COLUMN IF NOT EXISTS source_type VARCHAR(20) DEFAULT 'non-recurring',
+          ADD COLUMN IF NOT EXISTS client_billing_row_id UUID;
+      `);
+
+      await pool.query(`
+        ALTER TABLE expenses
+          ADD COLUMN IF NOT EXISTS source_type VARCHAR(20) DEFAULT 'non-recurring',
+          ADD COLUMN IF NOT EXISTS recurring_expense_client_id UUID,
+          ADD COLUMN IF NOT EXISTS team_client_allocation_id UUID,
+          ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS vendors (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          name VARCHAR(255) NOT NULL,
+          gstin VARCHAR(15),
+          pan VARCHAR(10),
+          contact_person VARCHAR(255),
+          email VARCHAR(255),
+          mobile VARCHAR(20),
+          is_active BOOLEAN DEFAULT true,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS recurring_expenses (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          expense_head_id UUID REFERENCES expense_heads(id) NOT NULL,
+          amount DECIMAL(15, 2) NOT NULL,
+          start_period VARCHAR(10) NOT NULL,
+          end_period VARCHAR(10),
+          is_active BOOLEAN DEFAULT true,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          created_by UUID REFERENCES users(id),
+          updated_by UUID REFERENCES users(id)
+        );
+      `);
+
+      await pool.query(`
+        ALTER TABLE recurring_expenses
+          ADD COLUMN IF NOT EXISTS vendor_id UUID REFERENCES vendors(id),
+          ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;
+      `).catch(() => {});
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS recurring_expense_teams (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          recurring_expense_id UUID REFERENCES recurring_expenses(id) ON DELETE CASCADE,
+          team_id UUID REFERENCES teams(id) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS recurring_expense_clients (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          recurring_expense_team_id UUID REFERENCES recurring_expense_teams(id) ON DELETE CASCADE,
+          client_id UUID REFERENCES clients(id) NOT NULL,
+          reviewer_id UUID REFERENCES teams(id),
+          start_period VARCHAR(10),
+          end_period VARCHAR(10),
+          amount DECIMAL(15, 2) NOT NULL DEFAULT 0,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      await pool.query(`
+        ALTER TABLE recurring_expense_clients ALTER COLUMN start_period DROP NOT NULL;
+      `).catch(() => {});
+
+      await pool.query(`
+        ALTER TABLE recurring_expense_clients
+          ADD COLUMN IF NOT EXISTS reviewer_id UUID REFERENCES teams(id),
+          ADD COLUMN IF NOT EXISTS team_id UUID REFERENCES teams(id),
+          ADD COLUMN IF NOT EXISTS recurring_expense_id UUID REFERENCES recurring_expenses(id) ON DELETE CASCADE;
+      `).catch(() => {});
+
+      await pool.query(`
+        UPDATE recurring_expense_clients rec
+        SET team_id = ret.team_id,
+            recurring_expense_id = ret.recurring_expense_id
+        FROM recurring_expense_teams ret
+        WHERE ret.id = rec.recurring_expense_team_id
+          AND (rec.team_id IS NULL OR rec.recurring_expense_id IS NULL);
+      `).catch(() => {});
+
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_client_billing_rows_client ON client_billing_rows(client_id)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_client_billing_rows_period ON client_billing_rows(start_period, end_period)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_revenues_client_billing_row_period ON revenues(client_billing_row_id, service_period_id)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_expenses_source_type ON expenses(source_type)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_expenses_recurring_client_period ON expenses(recurring_expense_client_id, service_period_id)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_expenses_team_alloc_period ON expenses(team_client_allocation_id, service_period_id)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_recurring_expense_teams_expense ON recurring_expense_teams(recurring_expense_id)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_recurring_expense_clients_team ON recurring_expense_clients(recurring_expense_team_id)');
+      await pool.query('CREATE INDEX IF NOT EXISTS idx_recurring_expense_clients_re ON recurring_expense_clients(recurring_expense_id)');
+
+      await ensureTeamAllocationPeriodColumns(pool);
+    })().catch((error) => {
       reportsSchemaPromise = null;
       throw error;
     });
@@ -180,10 +307,9 @@ const buildRecurringExpenseWhere = ({ financialYear, clientId } = {}) => {
 const getTeamRecurringExpenseStats = async ({ financialYear, clientId } = {}) => {
   const params = [];
   let paramIndex = 1;
-  let whereClause = `WHERE t.is_reviewer = true
-    AND t.start_period IS NOT NULL
+  let whereClause = `WHERE t.start_period IS NOT NULL
     AND t.amount IS NOT NULL
-    AND (${buildTeamAllocationExistsExpr('tca')} OR e.id IS NOT NULL)
+    AND (${buildTeamAssignedAllocationExpr('tca')} OR e.id IS NOT NULL)
     AND (
       t.is_active = true
       OR COALESCE(tca.end_period, t.end_period) IS NOT NULL
@@ -213,6 +339,60 @@ const getTeamRecurringExpenseStats = async ({ financialYear, clientId } = {}) =>
      AND e.service_period_id = sp.id
     ${whereClause}
   `, params);
+  return result.rows[0];
+};
+
+const getTeamAdminExpenseStats = async ({ financialYear } = {}) => {
+  const params = [];
+  let paramIndex = 1;
+  let whereClause = `WHERE t.start_period IS NOT NULL
+    AND t.amount IS NOT NULL
+    AND (
+      t.is_active = true
+      OR t.end_period IS NOT NULL
+    )`;
+  if (financialYear) {
+    params.push(financialYear);
+    whereClause += ` AND sp.financial_year = $${paramIndex++}`;
+  }
+
+  const result = await pool.query(`
+    SELECT
+      COUNT(*) as expense_count,
+      COALESCE(SUM(pending.unallocated_amount), 0) as total_expense,
+      0 as billed_expense,
+      0 as unbilled_expense
+    FROM teams t
+    JOIN service_periods sp
+      ON sp.is_active = true
+     AND sp.start_date >= TO_DATE('01-' || t.start_period, 'DD-Mon-YY')
+     AND (
+       t.end_period IS NULL
+       OR sp.start_date <= TO_DATE('01-' || t.end_period, 'DD-Mon-YY')
+     )
+    JOIN LATERAL (
+      SELECT ROUND(GREATEST(
+        ${buildTeamCompensationAmountExpr('t', 'sp')} -
+        COALESCE(SUM(
+          CASE
+            WHEN ${buildTeamAssignedAllocationExpr('tca')} THEN ${buildTeamAllocationAmountExpr('tca', 't', 'sp')}
+            ELSE 0
+          END
+        ), 0),
+        0
+      ), 2) as unallocated_amount
+      FROM team_client_allocations tca
+      WHERE tca.team_id = t.id
+        AND sp.start_date >= TO_DATE('01-' || COALESCE(tca.start_period, t.start_period), 'DD-Mon-YY')
+        AND (
+          COALESCE(tca.end_period, t.end_period) IS NULL
+          OR sp.start_date <= TO_DATE('01-' || COALESCE(tca.end_period, t.end_period), 'DD-Mon-YY')
+        )
+    ) pending ON true
+    ${whereClause}
+      AND pending.unallocated_amount > 0.009
+  `, params);
+
   return result.rows[0];
 };
 
@@ -320,11 +500,12 @@ router.get('/dashboard', auth, async (req, res) => {
       };
     }
 
-    const [recurringExpense, nonRecurringExpense, teamRecurringExpense, adminRecurringExpense] = await Promise.all([
+    const [recurringExpense, nonRecurringExpense, teamRecurringExpense, adminRecurringExpense, teamAdminExpense] = await Promise.all([
       getRecurringExpenseStats({ financialYear }),
       getNonRecurringExpenseStats({ financialYear }),
       getTeamRecurringExpenseStats({ financialYear }),
       getAdminRecurringExpenseStats({ financialYear }),
+      getTeamAdminExpenseStats({ financialYear }),
     ]);
     
     const clientStats = await pool.query(`
@@ -334,10 +515,10 @@ router.get('/dashboard', auth, async (req, res) => {
     `);
     
     const expense = {
-      total_expense: (parseFloat(recurringExpense.total_expense) || 0) + (parseFloat(nonRecurringExpense.total_expense) || 0) + (parseFloat(teamRecurringExpense.total_expense) || 0) + (parseFloat(adminRecurringExpense.total_expense) || 0),
-      billed_expense: (parseFloat(recurringExpense.billed_expense) || 0) + (parseFloat(nonRecurringExpense.billed_expense) || 0) + (parseFloat(teamRecurringExpense.billed_expense) || 0) + (parseFloat(adminRecurringExpense.billed_expense) || 0),
-      unbilled_expense: (parseFloat(recurringExpense.unbilled_expense) || 0) + (parseFloat(nonRecurringExpense.unbilled_expense) || 0) + (parseFloat(teamRecurringExpense.unbilled_expense) || 0) + (parseFloat(adminRecurringExpense.unbilled_expense) || 0),
-      expense_count: (parseInt(recurringExpense.expense_count, 10) || 0) + (parseInt(nonRecurringExpense.expense_count, 10) || 0) + (parseInt(teamRecurringExpense.expense_count, 10) || 0) + (parseInt(adminRecurringExpense.expense_count, 10) || 0),
+      total_expense: (parseFloat(recurringExpense.total_expense) || 0) + (parseFloat(nonRecurringExpense.total_expense) || 0) + (parseFloat(teamRecurringExpense.total_expense) || 0) + (parseFloat(adminRecurringExpense.total_expense) || 0) + (parseFloat(teamAdminExpense.total_expense) || 0),
+      billed_expense: (parseFloat(recurringExpense.billed_expense) || 0) + (parseFloat(nonRecurringExpense.billed_expense) || 0) + (parseFloat(teamRecurringExpense.billed_expense) || 0) + (parseFloat(adminRecurringExpense.billed_expense) || 0) + (parseFloat(teamAdminExpense.billed_expense) || 0),
+      unbilled_expense: (parseFloat(recurringExpense.unbilled_expense) || 0) + (parseFloat(nonRecurringExpense.unbilled_expense) || 0) + (parseFloat(teamRecurringExpense.unbilled_expense) || 0) + (parseFloat(adminRecurringExpense.unbilled_expense) || 0) + (parseFloat(teamAdminExpense.unbilled_expense) || 0),
+      expense_count: (parseInt(recurringExpense.expense_count, 10) || 0) + (parseInt(nonRecurringExpense.expense_count, 10) || 0) + (parseInt(teamRecurringExpense.expense_count, 10) || 0) + (parseInt(adminRecurringExpense.expense_count, 10) || 0) + (parseInt(teamAdminExpense.expense_count, 10) || 0),
     };
     
     res.json({
@@ -729,10 +910,9 @@ router.get('/trend/monthly', auth, async (req, res) => {
 
     // Team-recurring expenses
     const teamExpenseParams = [];
-    let teamExpenseWhereStart = `WHERE t.is_reviewer = true
-      AND t.start_period IS NOT NULL
+    let teamExpenseWhereStart = `WHERE t.start_period IS NOT NULL
       AND t.amount IS NOT NULL
-      AND (${buildTeamAllocationExistsExpr('tca')} OR e.id IS NOT NULL)
+      AND (${buildTeamAssignedAllocationExpr('tca')} OR e.id IS NOT NULL)
       AND (
         t.is_active = true
         OR COALESCE(tca.end_period, t.end_period) IS NOT NULL
@@ -741,7 +921,7 @@ router.get('/trend/monthly', auth, async (req, res) => {
     let teamExpPI = 1;
     if (financialYear) { teamExpenseParams.push(financialYear); teamExpenseWhereStart += ` AND sp.financial_year = $${teamExpPI++}`; }
     if (clientId)      { teamExpenseParams.push(clientId);      teamExpenseWhereStart += ` AND tca.client_id = $${teamExpPI++}`; }
-    if (reviewerId)    { teamExpenseParams.push(reviewerId);    teamExpenseWhereStart += ` AND t.id = $${teamExpPI++}`; }
+    if (reviewerId)    { teamExpenseParams.push(reviewerId);    teamExpenseWhereStart += ` AND COALESCE(e.reviewer_id, tca.reviewer_id) = $${teamExpPI++}`; }
 
     const teamRecurringExpenseResult = await pool.query(`
       SELECT
@@ -777,6 +957,60 @@ router.get('/trend/monthly', auth, async (req, res) => {
       }
       expenseMap[row.period].expense += parseFloat(row.expense) || 0;
     });
+
+    if (!clientId && !reviewerId) {
+      const teamAdminExpenseResult = await pool.query(`
+        SELECT
+          sp.display_name as period,
+          sp.start_date,
+          COALESCE(SUM(pending.unallocated_amount), 0) as expense
+        FROM teams t
+        JOIN service_periods sp
+          ON sp.is_active = true
+         AND sp.start_date >= TO_DATE('01-' || t.start_period, 'DD-Mon-YY')
+         AND (
+           t.end_period IS NULL
+           OR sp.start_date <= TO_DATE('01-' || t.end_period, 'DD-Mon-YY')
+         )
+        JOIN LATERAL (
+          SELECT ROUND(GREATEST(
+            ${buildTeamCompensationAmountExpr('t', 'sp')} -
+            COALESCE(SUM(
+              CASE
+                WHEN ${buildTeamAssignedAllocationExpr('tca')} THEN ${buildTeamAllocationAmountExpr('tca', 't', 'sp')}
+                ELSE 0
+              END
+            ), 0),
+            0
+          ), 2) as unallocated_amount
+          FROM team_client_allocations tca
+          WHERE tca.team_id = t.id
+            AND sp.start_date >= TO_DATE('01-' || COALESCE(tca.start_period, t.start_period), 'DD-Mon-YY')
+            AND (
+              COALESCE(tca.end_period, t.end_period) IS NULL
+              OR sp.start_date <= TO_DATE('01-' || COALESCE(tca.end_period, t.end_period), 'DD-Mon-YY')
+            )
+        ) pending ON true
+        WHERE t.start_period IS NOT NULL
+          AND t.amount IS NOT NULL
+          AND (t.is_active = true OR t.end_period IS NOT NULL)
+          ${financialYear ? 'AND sp.financial_year = $1' : ''}
+          AND pending.unallocated_amount > 0.009
+        GROUP BY sp.id, sp.display_name, sp.start_date
+        ORDER BY sp.start_date
+      `, financialYear ? [financialYear] : []);
+
+      teamAdminExpenseResult.rows.forEach((row) => {
+        if (!expenseMap[row.period]) {
+          expenseMap[row.period] = {
+            period: row.period,
+            expense: 0,
+            start_date: row.start_date
+          };
+        }
+        expenseMap[row.period].expense += parseFloat(row.expense) || 0;
+      });
+    }
     
     // Merge revenue and expense data
     const mergedData = {};
@@ -1463,7 +1697,7 @@ router.get('/matrix', auth, async (req, res) => {
     let teamExpWhere = ' AND sp.financial_year = $1';
     let tei = 2;
     if (clientIdArr.length) { teamExpParams.push(clientIdArr); teamExpWhere += ` AND tca.client_id = ANY($${tei++}::uuid[])`; }
-    if (reviewerIdArr.length) { teamExpParams.push(reviewerIdArr); teamExpWhere += ` AND t.id = ANY($${tei++}::uuid[])`; }
+    if (reviewerIdArr.length) { teamExpParams.push(reviewerIdArr); teamExpWhere += ` AND COALESCE(e.reviewer_id, tca.reviewer_id) = ANY($${tei++}::uuid[])`; }
 
     const teamExpenseResult = await pool.query(`
       SELECT
@@ -1486,10 +1720,9 @@ router.get('/matrix', auth, async (req, res) => {
        AND e.source_type = 'team-recurring'
        AND e.team_client_allocation_id = tca.id
        AND e.service_period_id = sp.id
-      WHERE t.is_reviewer = true
-        AND t.start_period IS NOT NULL
+      WHERE t.start_period IS NOT NULL
         AND t.amount IS NOT NULL
-        AND (${buildTeamAllocationExistsExpr('tca')} OR e.id IS NOT NULL)
+        AND (${buildTeamAssignedAllocationExpr('tca')} OR e.id IS NOT NULL)
         AND (
           t.is_active = true
           OR COALESCE(tca.end_period, t.end_period) IS NOT NULL
@@ -1498,6 +1731,48 @@ router.get('/matrix', auth, async (req, res) => {
       GROUP BY eh.id, eh.name, sp.display_name, sp.start_date
       ORDER BY eh.name, sp.start_date
     `, teamExpParams);
+
+    const teamAdminResult = wantProjected ? await pool.query(`
+      SELECT
+        CONCAT(t.name, ' | Pending group/reviewer') as head_name,
+        t.id::text as head_id,
+        sp.display_name as period,
+        COALESCE(SUM(pending.unallocated_amount), 0) as amount
+      FROM teams t
+      JOIN service_periods sp
+        ON sp.is_active = true
+       AND sp.start_date >= TO_DATE('01-' || t.start_period, 'DD-Mon-YY')
+       AND (
+         t.end_period IS NULL
+         OR sp.start_date <= TO_DATE('01-' || t.end_period, 'DD-Mon-YY')
+       )
+      JOIN LATERAL (
+        SELECT ROUND(GREATEST(
+          ${buildTeamCompensationAmountExpr('t', 'sp')} -
+          COALESCE(SUM(
+            CASE
+              WHEN ${buildTeamAssignedAllocationExpr('tca')} THEN ${buildTeamAllocationAmountExpr('tca', 't', 'sp')}
+              ELSE 0
+            END
+          ), 0),
+          0
+        ), 2) as unallocated_amount
+        FROM team_client_allocations tca
+        WHERE tca.team_id = t.id
+          AND sp.start_date >= TO_DATE('01-' || COALESCE(tca.start_period, t.start_period), 'DD-Mon-YY')
+          AND (
+            COALESCE(tca.end_period, t.end_period) IS NULL
+            OR sp.start_date <= TO_DATE('01-' || COALESCE(tca.end_period, t.end_period), 'DD-Mon-YY')
+          )
+      ) pending ON true
+      WHERE t.start_period IS NOT NULL
+        AND t.amount IS NOT NULL
+        AND (t.is_active = true OR t.end_period IS NOT NULL)
+        AND sp.financial_year = $1
+        AND pending.unallocated_amount > 0.009
+      GROUP BY t.id, t.name, sp.display_name, sp.start_date
+      ORDER BY t.name, sp.start_date
+    `, [financialYear]) : { rows: [] };
 
     // Build period list
     const periodNames = periods.map(p => p.display_name);
@@ -1537,6 +1812,7 @@ router.get('/matrix', auth, async (req, res) => {
       adminExpenseMap[row.head_name][row.period] = (adminExpenseMap[row.head_name][row.period] || 0) + (parseFloat(row.amount) || 0);
     };
     adminResult.rows.forEach(addAdminExpRow);
+    teamAdminResult.rows.forEach(addAdminExpRow);
 
     // Convert to rows
     const revenueFinalRows = Object.entries(revenueMap).map(([head, months]) => {
@@ -1620,7 +1896,7 @@ router.get('/variance', auth, async (req, res) => {
          cbr.end_period IS NULL
          OR sp.start_date <= TO_DATE('01-' || cbr.end_period, 'DD-Mon-YY')
        )
-      JOIN LATERAL (
+      LEFT JOIN LATERAL (
         SELECT r.*
         FROM revenues r
         WHERE r.is_active = true
@@ -1663,7 +1939,7 @@ router.get('/variance', auth, async (req, res) => {
          COALESCE(rec.end_period, re.end_period) IS NULL
          OR sp.start_date <= TO_DATE('01-' || COALESCE(rec.end_period, re.end_period), 'DD-Mon-YY')
        )
-      JOIN expenses e
+      LEFT JOIN expenses e
         ON e.is_active = true
        AND e.source_type = 'recurring'
        AND e.recurring_expense_client_id = rec.id
@@ -1674,8 +1950,7 @@ router.get('/variance', auth, async (req, res) => {
     `, recurringExpenseParams);
 
     const teamExpenseParams = [financialYear];
-    let teamExpenseWhere = `WHERE ${buildTeamAllocationExistsExpr('tca')}
-      AND t.is_reviewer = true
+    let teamExpenseWhere = `WHERE (${buildTeamAssignedAllocationExpr('tca')} OR e.id IS NOT NULL)
       AND t.start_period IS NOT NULL
       AND t.amount IS NOT NULL
       AND sp.financial_year = $1
@@ -1691,7 +1966,7 @@ router.get('/variance', auth, async (req, res) => {
     }
     if (reviewerIdArr.length) {
       teamExpenseParams.push(reviewerIdArr);
-      teamExpenseWhere += ` AND COALESCE(e.team_id, t.id) = ANY($${teamExpenseParamIndex++}::uuid[])`;
+      teamExpenseWhere += ` AND COALESCE(e.reviewer_id, tca.reviewer_id) = ANY($${teamExpenseParamIndex++}::uuid[])`;
     }
 
     const teamExpenseVarianceResult = await pool.query(`
@@ -1709,7 +1984,7 @@ router.get('/variance', auth, async (req, res) => {
          COALESCE(tca.end_period, t.end_period) IS NULL
          OR sp.start_date <= TO_DATE('01-' || COALESCE(tca.end_period, t.end_period), 'DD-Mon-YY')
        )
-      JOIN expenses e
+      LEFT JOIN expenses e
         ON e.is_active = true
        AND e.source_type = 'team-recurring'
        AND e.team_client_allocation_id = tca.id
@@ -1749,26 +2024,81 @@ router.get('/variance', auth, async (req, res) => {
         },
       ]),
     );
+    const teamAdminExpenseMap = new Map();
+
+    if (!clientIdArr.length && !reviewerIdArr.length) {
+      const teamAdminExpenseVarianceResult = await pool.query(`
+        SELECT
+          sp.display_name as period,
+          COALESCE(SUM(pending.unallocated_amount), 0) as projected_amount,
+          0 as billed_amount,
+          0 as unbilled_amount
+        FROM teams t
+        JOIN service_periods sp
+          ON sp.is_active = true
+         AND sp.start_date >= TO_DATE('01-' || t.start_period, 'DD-Mon-YY')
+         AND (
+           t.end_period IS NULL
+           OR sp.start_date <= TO_DATE('01-' || t.end_period, 'DD-Mon-YY')
+         )
+        JOIN LATERAL (
+          SELECT ROUND(GREATEST(
+            ${buildTeamCompensationAmountExpr('t', 'sp')} -
+            COALESCE(SUM(
+              CASE
+                WHEN ${buildTeamAssignedAllocationExpr('tca')} THEN ${buildTeamAllocationAmountExpr('tca', 't', 'sp')}
+                ELSE 0
+              END
+            ), 0),
+            0
+          ), 2) as unallocated_amount
+          FROM team_client_allocations tca
+          WHERE tca.team_id = t.id
+            AND sp.start_date >= TO_DATE('01-' || COALESCE(tca.start_period, t.start_period), 'DD-Mon-YY')
+            AND (
+              COALESCE(tca.end_period, t.end_period) IS NULL
+              OR sp.start_date <= TO_DATE('01-' || COALESCE(tca.end_period, t.end_period), 'DD-Mon-YY')
+            )
+        ) pending ON true
+        WHERE t.start_period IS NOT NULL
+          AND t.amount IS NOT NULL
+          AND sp.financial_year = $1
+          AND (t.is_active = true OR t.end_period IS NOT NULL)
+          AND pending.unallocated_amount > 0.009
+        GROUP BY sp.display_name, sp.start_date
+        ORDER BY sp.start_date
+      `, [financialYear]);
+
+      teamAdminExpenseVarianceResult.rows.forEach((row) => {
+        teamAdminExpenseMap.set(row.period, {
+          projected: parseFloat(row.projected_amount) || 0,
+          billed: 0,
+          unbilled: 0,
+        });
+      });
+    }
 
     const monthPeriods = Array.from(new Set([
       ...revenueMap.keys(),
       ...recurringExpenseMap.keys(),
       ...teamExpenseMap.keys(),
+      ...teamAdminExpenseMap.keys(),
     ])).sort((left, right) => (periodIndex.get(left) ?? Number.MAX_SAFE_INTEGER) - (periodIndex.get(right) ?? Number.MAX_SAFE_INTEGER));
 
     const monthData = monthPeriods.map((period) => {
       const revenueRow = revenueMap.get(period) || { projected: 0, billed: 0, unbilled: 0 };
       const recurringExpenseRow = recurringExpenseMap.get(period) || { projected: 0, billed: 0, unbilled: 0 };
       const teamExpenseRow = teamExpenseMap.get(period) || { projected: 0, billed: 0, unbilled: 0 };
+      const teamAdminExpenseRow = teamAdminExpenseMap.get(period) || { projected: 0, billed: 0, unbilled: 0 };
 
       const projectedRevenue = revenueRow.projected;
       const billedRevenue = revenueRow.billed;
       const unbilledRevenue = revenueRow.unbilled;
       const actualRevenue = billedRevenue + unbilledRevenue;
 
-      const projectedExpense = recurringExpenseRow.projected + teamExpenseRow.projected;
-      const billedExpense = recurringExpenseRow.billed + teamExpenseRow.billed;
-      const unbilledExpense = recurringExpenseRow.unbilled + teamExpenseRow.unbilled;
+      const projectedExpense = recurringExpenseRow.projected + teamExpenseRow.projected + teamAdminExpenseRow.projected;
+      const billedExpense = recurringExpenseRow.billed + teamExpenseRow.billed + teamAdminExpenseRow.billed;
+      const unbilledExpense = recurringExpenseRow.unbilled + teamExpenseRow.unbilled + teamAdminExpenseRow.unbilled;
       const actualExpense = billedExpense + unbilledExpense;
 
       return {

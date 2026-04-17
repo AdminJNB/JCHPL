@@ -1,0 +1,1099 @@
+Configured frontend origins: https://jchpl-frontend.vercel.app, http://localhost:3000
+Connected to PostgreSQL database
+Database connectivity check passed
+Server running on port 5000
+Environment: development
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT verify failed: Connection terminated due to connection timeout Error
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+Connected to PostgreSQL database
+Connected to PostgreSQL database
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f
+[AUTH DEBUG] JWT_SECRET defined: true length: 46
+[AUTH DEBUG] Token (first 20): eyJhbGciOiJIUzI1NiIs
+[AUTH DEBUG] Decoded OK: cfc9aefe-0548-440e-b30b-df69136e113f

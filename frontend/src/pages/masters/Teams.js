@@ -58,6 +58,39 @@ const formatLineList = (lines) => {
 const formatPercentage = (value) =>
   `${(parseFloat(value) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
 
+const normalizeTeamName = (value = '') => String(value).trim().replace(/\s+/g, ' ');
+const normalizeTeamMobile = (value = '') => String(value).replace(/\D+/g, '');
+const normalizeTeamEmail = (value = '') => String(value).trim().toLowerCase();
+
+const getTeamNameDuplicateMessage = (name, teams = [], selectedId = null) => {
+  const normalizedName = normalizeTeamName(name).toLowerCase();
+  if (!normalizedName) return '';
+
+  const duplicate = (teams || []).find((team) =>
+    team?.id !== selectedId && normalizeTeamName(team?.name || '').toLowerCase() === normalizedName
+  );
+
+  return duplicate ? 'Already exists.' : '';
+};
+
+const getTeamFieldDuplicateMessage = ({
+  value,
+  teams = [],
+  selectedId = null,
+  selector = (team) => '',
+  normalizer = (input) => input,
+  shouldCheck = (input) => Boolean(input),
+}) => {
+  const normalizedValue = normalizer(value);
+  if (!shouldCheck(normalizedValue)) return '';
+
+  const duplicate = (teams || []).find((team) =>
+    team?.id !== selectedId && normalizer(selector(team) || '') === normalizedValue
+  );
+
+  return duplicate ? `Already exists in ${duplicate.name || 'another team'}.` : '';
+};
+
 const roundAllocationAmount = (value) => Math.round((parseFloat(value) || 0) * 100) / 100;
 
 const calculateAllocationPercentage = (allocationAmount, periodAmount) => {
@@ -130,8 +163,8 @@ const getAllocationDuplicateState = (allocations = []) => {
   const groups = new Map();
 
   allocations.forEach((allocation, index) => {
-    if (!allocation?.client_id) return;
-    const key = `${allocation.client_id}||${allocation.expense_head_id || ''}`;
+    if (!allocation?.client_id || !allocation?.reviewer_id) return;
+    const key = `${allocation.client_id}||${allocation.reviewer_id}||${allocation.expense_head_id || ''}`;
     const existing = groups.get(key) || [];
     existing.push(index);
     groups.set(key, existing);
@@ -150,7 +183,7 @@ const getAllocationDuplicateState = (allocations = []) => {
         .filter((otherIndex) => otherIndex !== index)
         .map((otherIndex) => otherIndex + 1);
 
-      rowErrors[index] = `Same group + expense head is already selected on ${formatLineList(otherLines)}.`;
+      rowErrors[index] = `Same group + reviewer + expense head is already selected on ${formatLineList(otherLines)}.`;
     });
   });
 
@@ -158,7 +191,26 @@ const getAllocationDuplicateState = (allocations = []) => {
     rowErrors,
     hasDuplicates: duplicateGroups.length > 0,
     summary: duplicateGroups.length
-      ? `Duplicate group + expense head combinations found on ${duplicateGroups.map((lines) => formatLineList(lines)).join('; ')}.`
+      ? `Duplicate group + reviewer + expense head combinations found on ${duplicateGroups.map((lines) => formatLineList(lines)).join('; ')}.`
+      : ''
+  };
+};
+
+const getMissingReviewerState = (allocations = []) => {
+  const rowErrors = {};
+  const missingLines = [];
+
+  allocations.forEach((allocation, index) => {
+    if (!allocation?.client_id || allocation?.reviewer_id) return;
+    rowErrors[index] = 'Reviewer is required once a group is selected.';
+    missingLines.push(index + 1);
+  });
+
+  return {
+    rowErrors,
+    hasMissingReviewers: missingLines.length > 0,
+    summary: missingLines.length
+      ? `Reviewer is required on ${formatLineList(missingLines)}.`
       : ''
   };
 };
@@ -245,6 +297,8 @@ const Teams = () => {
         allocations: (row.client_allocations || []).map((allocation) => ({
           client_id: allocation.client_id || '',
           client_name: allocation.client_name || '',
+          reviewer_id: allocation.reviewer_id || '',
+          reviewer_name: allocation.reviewer_name || '',
           expense_head_id: allocation.expense_head_id || '',
           expense_head_name: allocation.expense_head_name || '',
           allocation_amount: Number(allocation.amount || allocation.allocation_amount || 0),
@@ -302,6 +356,7 @@ const Teams = () => {
     setError('');
     setFormData(p => ({ ...p, client_allocations: [...p.client_allocations, {
       client_id: '',
+      reviewer_id: '',
       allocation_percentage: 0,
       allocation_amount: 0,
       allocation_method: allocationMode,
@@ -356,6 +411,8 @@ const Teams = () => {
             allocations: [...draft.allocations, {
               client_id: '',
               client_name: '',
+              reviewer_id: '',
+              reviewer_name: '',
               expense_head_id: '',
               expense_head_name: '',
               allocation_amount: 0,
@@ -414,6 +471,11 @@ const Teams = () => {
 
     const cleanedAllocations = (draft.allocations || []).filter((allocation) => allocation?.client_id);
     const duplicateState = getAllocationDuplicateState(cleanedAllocations);
+    const missingReviewerState = getMissingReviewerState(cleanedAllocations);
+    if (missingReviewerState.hasMissingReviewers) {
+      setError(`${periodLabel}: ${missingReviewerState.summary}`);
+      return;
+    }
     if (duplicateState.hasDuplicates) {
       setError(`${periodLabel}: ${duplicateState.summary}`);
       return;
@@ -433,6 +495,7 @@ const Teams = () => {
 
     const payloadAllocations = cleanedAllocations.map((allocation) => ({
       client_id: allocation.client_id,
+      reviewer_id: allocation.reviewer_id || undefined,
       expense_head_id: allocation.expense_head_id || undefined,
       allocation_amount: parseFloat(allocation.allocation_amount) || 0,
       allocation_percentage: parseFloat(allocation.allocation_percentage) || calculateAllocationPercentage(allocation.allocation_amount, amount),
@@ -483,6 +546,24 @@ const Teams = () => {
     return !liveCompensationRow.start_period || comparePeriods(period, liveCompensationRow.start_period) >= 0;
   });
   const allocationDuplicateState = getAllocationDuplicateState(formData.client_allocations);
+  const allocationReviewerState = getMissingReviewerState(formData.client_allocations);
+  const reviewerOptions = teams.filter((team) => team.is_reviewer && team.is_active !== false);
+  const teamNameDuplicateMessage = getTeamNameDuplicateMessage(formData.name, teams, selected?.id);
+  const mobileDuplicateMessage = getTeamFieldDuplicateMessage({
+    value: formData.mobile,
+    teams,
+    selectedId: selected?.id,
+    selector: (team) => team?.mobile,
+    normalizer: normalizeTeamMobile,
+    shouldCheck: (value) => value.length === 10,
+  });
+  const emailDuplicateMessage = getTeamFieldDuplicateMessage({
+    value: formData.email,
+    teams,
+    selectedId: selected?.id,
+    selector: (team) => team?.email,
+    normalizer: normalizeTeamEmail,
+  });
 
   const handleLiveCompensationChange = (field, value) => {
     setError('');
@@ -533,8 +614,11 @@ const Teams = () => {
 
   const handleSubmit = async () => {
     if (!formData.name.trim()) { setError('Name is required'); return; }
-    if (formData.mobile && !/^[0-9]{10}$/.test(formData.mobile)) { setError('Invalid mobile number'); return; }
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) { setError('Invalid email format'); return; }
+    if (teamNameDuplicateMessage) { setError('Team name already exists'); return; }
+    if (mobileDuplicateMessage) { setError(mobileDuplicateMessage); return; }
+    if (emailDuplicateMessage) { setError(emailDuplicateMessage); return; }
+    if (formData.mobile && !/^[0-9]{10}$/.test(normalizeTeamMobile(formData.mobile))) { setError('Invalid mobile number'); return; }
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) { setError('Invalid email format'); return; }
 
     const populatedCompensationRows = formData.compensation_rows.filter((row) => {
       const hasAmount = row?.amount !== '' && row?.amount !== null && row?.amount !== undefined;
@@ -574,6 +658,7 @@ const Teams = () => {
       .filter((alloc) => alloc?.client_id)
       .map((alloc) => ({
         client_id: alloc.client_id,
+        reviewer_id: alloc.reviewer_id || undefined,
         expense_head_id: alloc.expense_head_id || undefined,
         allocation_percentage: allocationMode === 'manual'
           ? calculateAllocationPercentage(alloc.allocation_amount, currentCompensationAmount)
@@ -585,6 +670,10 @@ const Teams = () => {
       }));
 
     if (cleanedAllocations.length > 0) {
+      if (allocationReviewerState.hasMissingReviewers) {
+        setError(allocationReviewerState.summary);
+        return;
+      }
       if (allocationDuplicateState.hasDuplicates) {
         setError(allocationDuplicateState.summary);
         return;
@@ -608,9 +697,9 @@ const Teams = () => {
 
     try {
       const payload = {
-        name: formData.name.trim(),
-        mobile: formData.mobile.trim() || undefined,
-        email: formData.email.trim() || undefined,
+        name: normalizeTeamName(formData.name),
+        mobile: normalizeTeamMobile(formData.mobile) || undefined,
+        email: normalizeTeamEmail(formData.email) || undefined,
         is_reviewer: formData.is_reviewer,
         is_admin: formData.is_admin,
         client_allocations: cleanedAllocations,
@@ -697,7 +786,17 @@ const Teams = () => {
   const reviewerCount = teams.filter((team) => team.is_reviewer).length;
   const columns = [
     { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
-    { field: 'client_allocations', headerName: 'Groups', width: 200, renderCell: (p) => (p.value || []).map(a => a.client_name).filter(Boolean).join(', ') || '-' },
+    {
+      field: 'client_allocations',
+      headerName: 'Groups',
+      width: 260,
+      renderCell: (p) => (p.value || [])
+        .map((allocation) => allocation?.client_name
+          ? `${allocation.client_name}${allocation.reviewer_name ? ` (${allocation.reviewer_name})` : ''}`
+          : '')
+        .filter(Boolean)
+        .join(', ') || '-'
+    },
     { field: 'amount', headerName: 'Current Amount', width: 140, renderCell: (p) => p.row.compensation_history?.length ? `INR ${Number(p.row.compensation_history[p.row.compensation_history.length - 1].amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}` : '-' },
     { field: 'start_period', headerName: 'From', width: 90, renderCell: (p) => p.row.compensation_history?.length ? p.row.compensation_history[0].from_period : (p.value || '-') },
     { field: 'end_period', headerName: 'To', width: 90, renderCell: (p) => p.row.compensation_history?.length ? (p.row.compensation_history[p.row.compensation_history.length - 1].to_period || 'Open') : (p.value || '-') },
@@ -781,13 +880,40 @@ const Teams = () => {
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <TextField fullWidth label="Name" value={formData.name} onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))} margin="normal" required />
+              <TextField
+                fullWidth
+                label="Name"
+                value={formData.name}
+                onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
+                margin="normal"
+                required
+                error={Boolean(teamNameDuplicateMessage)}
+                helperText={teamNameDuplicateMessage}
+              />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField fullWidth label="Mobile" value={formData.mobile} onChange={(e) => setFormData(p => ({ ...p, mobile: e.target.value }))} margin="normal" inputProps={{ maxLength: 10 }} />
+              <TextField
+                fullWidth
+                label="Mobile"
+                value={formData.mobile}
+                onChange={(e) => setFormData(p => ({ ...p, mobile: e.target.value }))}
+                margin="normal"
+                inputProps={{ maxLength: 10 }}
+                error={Boolean(mobileDuplicateMessage)}
+                helperText={mobileDuplicateMessage}
+              />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField fullWidth label="Email" type="email" value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} margin="normal" />
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))}
+                margin="normal"
+                error={Boolean(emailDuplicateMessage)}
+                helperText={emailDuplicateMessage}
+              />
             </Grid>
             <Grid item xs={12} md={3}>
               <FormControlLabel control={<Checkbox checked={formData.is_reviewer} onChange={(e) => setFormData(p => ({ ...p, is_reviewer: e.target.checked }))} />} label="Is Reviewer" sx={{ mt: 2 }} />
@@ -879,12 +1005,18 @@ const Teams = () => {
                 {allocationDuplicateState.summary}
               </Alert>
             )}
+            {allocationReviewerState.hasMissingReviewers && (
+              <Alert severity="error" sx={{ mb: 1.5 }}>
+                {allocationReviewerState.summary}
+              </Alert>
+            )}
             {formData.client_allocations.length > 0 ? (
               <Table size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell width={72}>Line</TableCell>
                     <TableCell>Group</TableCell>
+                    <TableCell width={180}>Reviewer</TableCell>
                     <TableCell width={170}>Expense Head</TableCell>
                     <TableCell width={140}>{allocationMode === 'manual' ? 'Alloc. Amount' : 'Alloc. %'}</TableCell>
                     <TableCell width={50}></TableCell>
@@ -893,7 +1025,8 @@ const Teams = () => {
                 <TableBody>
                   {formData.client_allocations.map((alloc, idx) => {
                     const availableClients = clients.filter((c) => c.is_active !== false);
-                    const rowError = allocationDuplicateState.rowErrors[idx] || '';
+                    const rowError = allocationDuplicateState.rowErrors[idx] || allocationReviewerState.rowErrors[idx] || '';
+                    const selectedReviewer = teams.find((team) => team.id === alloc.reviewer_id);
                     return (
                     <TableRow
                       key={idx}
@@ -919,13 +1052,27 @@ const Teams = () => {
                       </TableCell>
                       <TableCell>
                         <FormControl fullWidth size="small" error={Boolean(rowError)}>
+                          <Select value={alloc.reviewer_id || ''} onChange={(e) => handleAllocationChange(idx, 'reviewer_id', e.target.value)}>
+                            <MenuItem value="">Select reviewer</MenuItem>
+                            {alloc.reviewer_id && !reviewerOptions.find((reviewer) => reviewer.id === alloc.reviewer_id) && (
+                              <MenuItem value={alloc.reviewer_id}>{selectedReviewer?.name || alloc.reviewer_name || alloc.reviewer_id}</MenuItem>
+                            )}
+                            {reviewerOptions.map((reviewer) => (
+                              <MenuItem key={reviewer.id} value={reviewer.id}>{reviewer.name}</MenuItem>
+                            ))}
+                          </Select>
+                          {allocationReviewerState.rowErrors[idx] && <FormHelperText>{allocationReviewerState.rowErrors[idx]}</FormHelperText>}
+                        </FormControl>
+                      </TableCell>
+                      <TableCell>
+                        <FormControl fullWidth size="small" error={Boolean(allocationDuplicateState.rowErrors[idx])}>
                           <Select value={alloc.expense_head_id || ''} onChange={(e) => handleAllocationChange(idx, 'expense_head_id', e.target.value)}>
                             <MenuItem value="">None</MenuItem>
                             {expenseHeads.filter(eh => eh.is_active !== false).map((eh) => (
                               <MenuItem key={eh.id} value={eh.id}>{eh.name}</MenuItem>
                             ))}
                           </Select>
-                          {rowError && <FormHelperText>{rowError}</FormHelperText>}
+                          {allocationDuplicateState.rowErrors[idx] && <FormHelperText>{allocationDuplicateState.rowErrors[idx]}</FormHelperText>}
                         </FormControl>
                       </TableCell>
                       <TableCell>
@@ -948,7 +1095,7 @@ const Teams = () => {
                     );
                   })}
                   <TableRow>
-                    <TableCell colSpan={3}><strong>Total</strong></TableCell>
+                    <TableCell colSpan={4}><strong>Total</strong></TableCell>
                     <TableCell>
                       <Chip
                         label={allocationMode === 'manual' ? `INR ${getTotalAllocation().toFixed(2)}` : `${getTotalAllocation()}%`}
@@ -976,7 +1123,20 @@ const Teams = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)} sx={{ textTransform: 'none' }}>Cancel</Button>
-          <Button variant="contained" onClick={handleSubmit} sx={{ textTransform: 'none' }}>{selected ? 'Update' : 'Create'}</Button>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={
+              Boolean(teamNameDuplicateMessage) ||
+              Boolean(mobileDuplicateMessage) ||
+              Boolean(emailDuplicateMessage) ||
+              allocationDuplicateState.hasDuplicates ||
+              allocationReviewerState.hasMissingReviewers
+            }
+            sx={{ textTransform: 'none' }}
+          >
+            {selected ? 'Update' : 'Create'}
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -1042,7 +1202,7 @@ const Teams = () => {
         <DialogTitle>Compensation by Period</DialogTitle>
         <DialogContent>
           <Alert severity="info" sx={{ mb: 2 }}>
-            Closed-period amounts and allocations can be corrected here. Client, expense head, and allocation rows can be changed for the selected closed period, while future recurring line items stay independent.
+            Closed-period amounts and allocations can be corrected here. Group, reviewer, expense head, and allocation rows can be changed for the selected closed period, while future recurring line items stay independent.
           </Alert>
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
           {historyDrafts.length > 0 ? (
@@ -1053,6 +1213,7 @@ const Teams = () => {
                 const allocationPercentageTotal = getHistoryAllocationPercentageTotal(draft.allocations);
                 const amount = parseFloat(draft.amount || 0) || 0;
                 const allocationDuplicateState = getAllocationDuplicateState(draft.allocations);
+                const allocationReviewerState = getMissingReviewerState(draft.allocations);
                 const availableClients = clients.filter((client) => client.is_active !== false);
                 const activeExpenseHeads = expenseHeads.filter((expenseHead) => expenseHead.is_active !== false);
                 const isSaving = historySavingKey === getHistoryDraftKey(draft);
@@ -1125,6 +1286,11 @@ const Teams = () => {
                         {allocationDuplicateState.summary}
                       </Alert>
                     )}
+                    {allocationReviewerState.hasMissingReviewers && (
+                      <Alert severity="error" sx={{ mb: 1.5 }}>
+                        {allocationReviewerState.summary}
+                      </Alert>
+                    )}
 
                     {draft.allocations.length > 0 ? (
                       <Table size="small">
@@ -1132,6 +1298,7 @@ const Teams = () => {
                           <TableRow>
                             <TableCell width={72}>Line</TableCell>
                             <TableCell>Group</TableCell>
+                            <TableCell width={180}>Reviewer</TableCell>
                             <TableCell width={180}>Expense Head</TableCell>
                             <TableCell width={160}>Allocation Amount</TableCell>
                             <TableCell width={140}>Allocation %</TableCell>
@@ -1140,8 +1307,9 @@ const Teams = () => {
                         </TableHead>
                         <TableBody>
                           {draft.allocations.map((allocation, allocationIndex) => {
-                            const rowError = allocationDuplicateState.rowErrors[allocationIndex] || '';
+                            const rowError = allocationDuplicateState.rowErrors[allocationIndex] || allocationReviewerState.rowErrors[allocationIndex] || '';
                             const selectedClient = clients.find((client) => client.id === allocation.client_id);
+                            const selectedReviewer = teams.find((team) => team.id === allocation.reviewer_id);
                             const selectedExpenseHead = expenseHeads.find((expenseHead) => expenseHead.id === allocation.expense_head_id);
 
                             return (
@@ -1177,6 +1345,24 @@ const Teams = () => {
                                 </TableCell>
                                 <TableCell>
                                   <FormControl fullWidth size="small" error={Boolean(rowError)}>
+                                    <Select
+                                      value={allocation.reviewer_id || ''}
+                                      onChange={(e) => handleHistoryAllocationChange(idx, allocationIndex, 'reviewer_id', e.target.value)}
+                                    >
+                                      <MenuItem value="">Select reviewer</MenuItem>
+                                      {allocation.reviewer_id && !reviewerOptions.find((reviewer) => reviewer.id === allocation.reviewer_id) && (
+                                        <MenuItem value={allocation.reviewer_id}>
+                                          {selectedReviewer?.name || allocation.reviewer_name || allocation.reviewer_id}
+                                        </MenuItem>
+                                      )}
+                                      {reviewerOptions.map((reviewer) => (
+                                        <MenuItem key={reviewer.id} value={reviewer.id}>{reviewer.name}</MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                </TableCell>
+                                <TableCell>
+                                  <FormControl fullWidth size="small" error={Boolean(allocationDuplicateState.rowErrors[allocationIndex])}>
                                     <Select
                                       value={allocation.expense_head_id || ''}
                                       onChange={(e) => handleHistoryAllocationChange(idx, allocationIndex, 'expense_head_id', e.target.value)}
@@ -1224,7 +1410,7 @@ const Teams = () => {
                             );
                           })}
                           <TableRow>
-                            <TableCell colSpan={3}><strong>Total</strong></TableCell>
+                            <TableCell colSpan={4}><strong>Total</strong></TableCell>
                             <TableCell>
                               <Chip
                                 label={`INR ${allocationTotal.toFixed(2)}`}

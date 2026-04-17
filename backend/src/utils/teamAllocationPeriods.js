@@ -101,7 +101,8 @@ const ensureTeamAllocationPeriodColumns = async (pool) => {
           ADD COLUMN IF NOT EXISTS start_period VARCHAR(10),
           ADD COLUMN IF NOT EXISTS end_period VARCHAR(10),
           ADD COLUMN IF NOT EXISTS allocation_amount DECIMAL(15, 2),
-          ADD COLUMN IF NOT EXISTS allocation_method VARCHAR(20) DEFAULT 'percentage';
+          ADD COLUMN IF NOT EXISTS allocation_method VARCHAR(20) DEFAULT 'percentage',
+          ADD COLUMN IF NOT EXISTS reviewer_id UUID REFERENCES teams(id);
       `);
 
       await pool.query(`
@@ -112,6 +113,11 @@ const ensureTeamAllocationPeriodColumns = async (pool) => {
       await pool.query(`
         CREATE INDEX IF NOT EXISTS idx_team_client_allocations_team_period
         ON team_client_allocations(team_id, start_period, end_period);
+      `);
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_team_client_allocations_reviewer
+        ON team_client_allocations(reviewer_id);
       `);
 
       await pool.query(`
@@ -165,6 +171,15 @@ const ensureTeamAllocationPeriodColumns = async (pool) => {
             OR tca.allocation_method = ''
           );
       `);
+
+      await pool.query(`
+        UPDATE team_client_allocations tca
+        SET reviewer_id = t.id
+        FROM teams t
+        WHERE t.id = tca.team_id
+          AND tca.reviewer_id IS NULL
+          AND t.is_reviewer = true;
+      `).catch(() => {});
     })().catch((error) => {
       teamAllocationSchemaPromise = null;
       throw error;
